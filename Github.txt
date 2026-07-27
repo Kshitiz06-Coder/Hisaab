@@ -5,4 +5,9 @@ git push
 git --oneline 
 
 
+to pull
+git pull
+
+
+
 git config --global --list
