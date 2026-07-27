@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/functions.php';
 
-if (!empty($_SESSION['user_id'])) redirect('register.php');
+if (!empty($_SESSION['user_id'])) redirect('dashboard.php');
 
 $errors = [];
 $email = '';
@@ -24,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $errors[] = 'Incorrect email or password.';
     }
+
+    // Delete a specific cookie
+    setcookie("username", "", time() - 3600, "/");
 }
 ?>
 <!DOCTYPE html>
