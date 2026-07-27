@@ -2,4 +2,7 @@ git add .
 git status
 git commit -m ""
 git push
+git --oneline 
+
+
 git config --global --list
