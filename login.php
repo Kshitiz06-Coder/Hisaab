@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-wrap">
   <div class="auth-visual">
     <a href="index.php" class="brand" style="color:#fff;">
-      <span class="brand-mark" style="background:rgba(255,255,255,.15);"><img src="Image/Logo.png" alt="Logo"></span>  Hissab
+      <span class="brand-mark" style="background:rgba(255,255,255,.15);"><img src="Image/Logo.png" alt="Logo"></span>  Hisaab
     </a>
     <div>
       <h2>Welcome back to your financial dashboard.</h2>
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
   <div class="auth-form-side">
     <div class="auth-card">
-      <div class="brand" style="color:var(--green-700);"><span class="brand-mark"><img src="Image/Logo.png" alt="Logo"></span> Hissab</div>
+      <div class="brand" style="color:var(--green-700);"><span class="brand-mark"><img src="Image/Logo.png" alt="Logo"></span> Hisaab</div>
       <h1>Log in</h1>
       <p class="subtitle">Enter your details to continue</p>
 
