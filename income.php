@@ -171,4 +171,16 @@ $page_sub = 'All the money coming in';
   </div>
 </div>
 
+<script>
+function openEditIncome(row) {
+  document.getElementById('edit_id').value = row.id;
+  document.getElementById('edit_source').value = row.source;
+  document.getElementById('edit_amount').value = row.amount;
+  document.getElementById('edit_date').value = row.entry_date;
+  document.getElementById('edit_category').value = row.category_id || '';
+  document.getElementById('edit_note').value = row.note || '';
+  document.getElementById('editIncomeModal').classList.add('open');
+}
+</script>
+
 <?php?>
