@@ -108,4 +108,67 @@ $page_sub = 'All the money coming in';
   </div>
 </div>
 
+<!-- Add Income Modal -->
+<div class="modal-backdrop" id="addIncomeModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Add Income</h3><button class="modal-close" data-modal-close>✕</button></div>
+    <form method="POST">
+      <div class="modal-body">
+        <input type="hidden" name="action" value="add">
+        <div class="field"><label>Source</label><input type="text" name="source" placeholder="e.g. Freelance project" required></div>
+        <div class="field-row">
+          <div class="field"><label>Amount (<?= e($currency) ?>)</label><input type="number" step="0.01" min="0.01" name="amount" placeholder="0.00" required></div>
+          <div class="field"><label>Date</label><input type="date" name="entry_date" value="<?= date('Y-m-d') ?>" required></div>
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select name="category_id">
+            <option value="">Uncategorized</option>
+            <?php foreach ($cat_list as $c): ?>
+              <option value="<?= $c['id'] ?>"><?= e($c['icon']) ?> <?= e($c['name']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="field"><label>Note (optional)</label><textarea name="note" rows="2" placeholder="Any extra detail"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Income</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Income Modal -->
+<div class="modal-backdrop" id="editIncomeModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Edit Income</h3><button class="modal-close" data-modal-close>✕</button></div>
+    <form method="POST">
+      <div class="modal-body">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" id="edit_id">
+        <div class="field"><label>Source</label><input type="text" name="source" id="edit_source" required></div>
+        <div class="field-row">
+          <div class="field"><label>Amount (<?= e($currency) ?>)</label><input type="number" step="0.01" min="0.01" name="amount" id="edit_amount" required></div>
+          <div class="field"><label>Date</label><input type="date" name="entry_date" id="edit_date" required></div>
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select name="category_id" id="edit_category">
+            <option value="">Uncategorized</option>
+            <?php foreach ($cat_list as $c): ?>
+              <option value="<?= $c['id'] ?>"><?= e($c['icon']) ?> <?= e($c['name']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="field"><label>Note (optional)</label><textarea name="note" id="edit_note" rows="2"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Income</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <?php?>
