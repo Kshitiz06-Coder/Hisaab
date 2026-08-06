@@ -77,3 +77,46 @@
     </form>
   </div>
 </div>
+
+<div class="modal-backdrop" id="editExpenseModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Edit Expense</h3><button class="modal-close" data-modal-close>✕</button></div>
+    <form method="POST">
+      <div class="modal-body">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" id="edit_id">
+        <div class="field"><label>Title</label><input type="text" name="title" id="edit_title" required></div>
+        <div class="field-row">
+          <div class="field"><label>Amount (<?= e($currency) ?>)</label><input type="number" step="0.01" min="0.01" name="amount" id="edit_amount" required></div>
+          <div class="field"><label>Date</label><input type="date" name="entry_date" id="edit_date" required></div>
+        </div>
+        <div class="field">
+          <label>Category</label>
+          <select name="category_id" id="edit_category">
+            <option value="">Uncategorized</option>
+            <?php foreach ($cat_list as $c): ?>
+              <option value="<?= $c['id'] ?>"><?= e($c['icon']) ?> <?= e($c['name']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="field"><label>Note (optional)</label><textarea name="note" id="edit_note" rows="2"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Expense</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEditExpense(row) {
+  document.getElementById('edit_id').value = row.id;
+  document.getElementById('edit_title').value = row.title;
+  document.getElementById('edit_amount').value = row.amount;
+  document.getElementById('edit_date').value = row.entry_date;
+  document.getElementById('edit_category').value = row.category_id || '';
+  document.getElementById('edit_note').value = row.note || '';
+  document.getElementById('editExpenseModal').classList.add('open');
+}
+</script>
