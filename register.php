@@ -14,11 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm = $_POST['confirm_password'] ?? '';
 
+    // 1. Local basic validations
     if ($full_name === '') $errors[] = 'Full name is required.';
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Enter a valid email address.';
     if (strlen($password) < 6) $errors[] = 'Password must be at least 6 characters.';
     if ($password !== $confirm) $errors[] = 'Passwords do not match.';
 
+    // 2. Check if email exists in Database
     if (!$errors) {
         $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
         mysqli_stmt_bind_param($stmt, 's', $email);
@@ -28,6 +30,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // 3. Mailboxlayer Real-World API Validation
+    if (!$errors) {
+        $apiKey = 'de7d69d7c6bde8d05f10a87fff0c177e'; 
+        $apiUrl = "https://apilayer.net/api/check?access_key={$apiKey}&email=" . urlencode($email);
+
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5); 
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        // Process API response if request was successful
+        if ($data && !isset($data['error'])) {
+            if (empty($data['format_valid'])) {
+                $errors[] = 'Invalid email syntax.';
+            } elseif (!empty($data['did_you_mean'])) {
+                $errors[] = 'Did you mean ' . htmlspecialchars($data['did_you_mean']) . '?';
+            } elseif (empty($data['mx_found'])) {
+                $errors[] = 'The email domain cannot receive messages (Invalid MX record).';
+            } elseif (!empty($data['disposable'])) {
+                $errors[] = 'Disposable or temporary email addresses are not allowed.';
+            } elseif (isset($data['score']) && $data['score'] < 0.4) {
+                $errors[] = 'This email address appears to be inactive or risky.';
+            }
+        }
+    }
+
+    // 4. Save to Database
     if (!$errors) {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $stmt = mysqli_prepare($conn, "INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)");
