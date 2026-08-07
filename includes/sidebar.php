@@ -12,7 +12,7 @@ function nav_active($page, $current) { return $page === $current ? 'active' : ''
   <nav class="sidebar-nav">
     <a href="dashboard.php" class="<?= nav_active('dashboard.php', $current) ?>"><span class="nav-ic"><img src="Image/Dashboard.png" alt="Logo"></span> Dashboard</a>
     <a href="income.php" class="<?= nav_active('income.php', $current) ?>"><span class="nav-ic"><img src="Image/Income.png" alt="Logo"></span> Income</a>
-    <a href="expenses.php" class="<?= nav_active('expenses.php', $current) ?>"><span class="nav-ic"><img src="Image/Expense.png" alt="Logo">/span> Expenses</a>
+    <a href="expenses.php" class="<?= nav_active('expenses.php', $current) ?>"><span class="nav-ic"><img src="Image/Expense.png" alt="Logo"></span> Expenses</a>
     <a href="savings.php" class="<?= nav_active('savings.php', $current) ?>"><span class="nav-ic"><img src="Image/Savings.png" alt="Logo"></span> Savings</a>
     <a href="reports.php" class="<?= nav_active('reports.php', $current) ?>"><span class="nav-ic"><img src="Image/Reports.png" alt="Logo"></span> Reports</a>
     <div class="nav-section-label">Account</div>
