@@ -24,9 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $errors[] = 'Incorrect email or password.';
     }
-
-    // Delete a specific cookie
-    setcookie("username", "", time() - 3600, "/");
 }
 ?>
 <!DOCTYPE html>
@@ -42,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-wrap">
   <div class="auth-visual">
     <a href="index.php" class="brand" style="color:#fff;">
-      <span class="brand-mark" style="background:rgba(255,255,255,.15);"><img src="Image/Logo.png" alt="Logo"></span>  Hisaab
+      <span class="brand-mark" style="background:rgba(255,255,255,.15);"><img src="Image/Logo.png" alt="Logo"></span> Hisaab
     </a>
     <div>
       <h2>Welcome back to your financial dashboard.</h2>
