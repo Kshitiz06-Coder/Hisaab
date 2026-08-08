@@ -4,7 +4,7 @@ require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/functions.php';
 require_once __DIR__ . '/config/mailer.php';
 
-if (!empty($_SESSION['user_id'])) redirect('dashboard.php');
+if (!empty($_SESSION['user_id'])) redirect('login.php');
 
 $errors = [];
 $full_name = $email = '';
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Account · Hissab</title>
+<title>Create Account · Hisaab</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/addon.css">
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-wrap">
   <div class="auth-visual">
     <a href="index.php" class="brand" style="color:#fff;">
-      <span class="brand-mark" style="background:rgba(255,255,255,.15);">🌿</span> Hissab
+      <span class="brand-mark" style="background:rgba(255,255,255,.15);"><img src="img/logo.png" alt="Hisaab Logo"></span> Hisaab
     </a>
     <div>
       <h2>Join the sustainable finance movement.</h2>
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
   <div class="auth-form-side">
     <div class="auth-card">
-      <div class="brand" style="color:var(--green-700);"><span class="brand-mark">🌿</span> Hissab</div>
+      <div class="brand" style="color:var(--green-700);"><span class="brand-mark"><img src="img/logo.png" alt="Hisaab Logo"></span> Hisaab</div>
       <h1>Create account</h1>
       <p class="subtitle">Start your financial journey today</p>
 

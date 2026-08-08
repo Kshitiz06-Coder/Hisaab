@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hissab · Sustainable Finance System</title>
+<title>Hisaab · Sustainable Finance System</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -12,7 +12,7 @@
 
 <div class="container">
   <nav class="landing-nav">
-    <a href="index.php" class="brand"><span class="brand-mark">🌿</span> Hissab</a>
+    <a href="index.php" class="brand"><span class="brand-mark"><img src="img/logo.png" alt="Hisaab Logo"></span> Hisaab</a>
     <div class="nav-actions">
       <a href="login.php" class="btn btn-ghost">Log in</a>
       <a href="register.php" class="btn btn-primary">Get Started</a>
@@ -62,17 +62,17 @@
     </div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="feature-icon">💵</div>
+        <div class="feature-icon"><img src="img/Savings.png" alt="Income"></div>
         <h3>Track Income</h3>
         <p>Log every source of income — salary, freelance, business — and see it roll up automatically.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🧾</div>
+        <div class="feature-icon"><img src="img/Expense.png" alt="Expense"></div>
         <h3>Manage Expenses</h3>
         <p>Categorize spending, spot patterns, and catch overspending before it becomes a habit.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🎯</div>
+        <div class="feature-icon"><img src="img/Income.png" alt="Savings"></div>
         <h3>Set Savings Goals</h3>
         <p>Give every rupee a job. Set targets, track progress, and celebrate milestones.</p>
       </div>

@@ -78,7 +78,7 @@ require __DIR__ . '/includes/topbar.php';
   <div class="card-body">
     <?php if (mysqli_num_rows($rows) === 0): ?>
       <div class="empty-state">
-        <div class="emoji">💵</div>
+        <div class="emoji"><img src="img/Savings.png" alt="Income">/div>
         <h4>No income logged<?= $month_filter ? ' for this month' : '' ?></h4>
         <p>Add a source of income to start tracking your earnings.</p>
         <button class="btn btn-primary btn-sm" data-modal-open="addIncomeModal">+ Add Income</button>
@@ -90,7 +90,7 @@ require __DIR__ . '/includes/topbar.php';
         <?php while ($row = mysqli_fetch_assoc($rows)): ?>
           <tr>
             <td><strong><?= e($row['source']) ?></strong></td>
-            <td><span class="pill"><?= e($row['cat_icon'] ?: '💰') ?> <?= e($row['cat_name'] ?: 'Uncategorized') ?></span></td>
+            <td><span class="pill"><?= e($row['cat_icon'] ?: '<img src="img/Income.png" alt="Savings">') ?> <?= e($row['cat_name'] ?: 'Uncategorized') ?></span></td>
             <td><?= date('M j, Y', strtotime($row['entry_date'])) ?></td>
             <td style="color:var(--ink-500);"><?= e($row['note'] ?: '—') ?></td>
             <td class="tx-amount income">+<?= money($row['amount'], $currency) ?></td>

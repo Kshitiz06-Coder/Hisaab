@@ -44,21 +44,21 @@ require __DIR__ . '/includes/topbar.php';
   <div class="stat-card">
     <div class="stat-top">
       <div><div class="stat-label">Income this month</div><div class="stat-value"><?= money($total_income, $currency) ?></div></div>
-      <div class="stat-icon income">💵</div>
+      <div class="stat-icon income"><img src="img/Savings.png" alt="Income"></div>
     </div>
     <span class="stat-trend up">↑ All-time: <?= money($all_income_ever, $currency) ?></span>
   </div>
   <div class="stat-card">
     <div class="stat-top">
       <div><div class="stat-label">Expenses this month</div><div class="stat-value"><?= money($total_expense, $currency) ?></div></div>
-      <div class="stat-icon expense">🧾</div>
+      <div class="stat-icon expense"><img src="img/Expense.png" alt="Expense"></div>
     </div>
     <span class="stat-trend down">↓ All-time: <?= money($all_expense_ever, $currency) ?></span>
   </div>
   <div class="stat-card">
     <div class="stat-top">
       <div><div class="stat-label">Net balance</div><div class="stat-value" style="color:<?= $balance >= 0 ? 'var(--green-700)' : 'var(--red-600)' ?>;"><?= money($balance, $currency) ?></div></div>
-      <div class="stat-icon balance">💰</div>
+      <div class="stat-icon balance"><img src="img/Income.png" alt="Savings"></div>
     </div>
     <span class="stat-trend <?= $balance >= 0 ? 'up' : 'down' ?>"><?= $balance >= 0 ? '✓ Healthy' : '⚠ Overspending' ?></span>
   </div>
