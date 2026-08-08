@@ -1,7 +1,8 @@
 <?php
+require_once __DIR__ . '/includes/auth_check.php';
 $currency = $user['currency'] ?: 'Rs';
 
-// ---- Handling form submissions ----
+// ---- Handle form submissions ----
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
@@ -36,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     redirect('income.php' . (!empty($_POST['month_filter']) ? '?month=' . urlencode($_POST['month_filter']) : ''));
 }
 
+// ---- Filters ----
 $month_filter = $_GET['month'] ?? '';
 $sql = "SELECT i.*, c.name AS cat_name, c.icon AS cat_icon FROM income i LEFT JOIN categories c ON i.category_id = c.id WHERE i.user_id = ?";
 $types = 'i'; $params = [$user['id']];
@@ -56,6 +58,9 @@ while ($c = mysqli_fetch_assoc($categories)) $cat_list[] = $c;
 
 $page_title = 'Income';
 $page_sub = 'All the money coming in';
+require __DIR__ . '/includes/head.php';
+require __DIR__ . '/includes/sidebar.php';
+require __DIR__ . '/includes/topbar.php';
 ?>
 
 <div class="toolbar">
@@ -73,7 +78,7 @@ $page_sub = 'All the money coming in';
   <div class="card-body">
     <?php if (mysqli_num_rows($rows) === 0): ?>
       <div class="empty-state">
-        <div class="emoji"><img src="./Image/Income.png"></div>
+        <div class="emoji"><img src="Image/Income.png"></div>
         <h4>No income logged<?= $month_filter ? ' for this month' : '' ?></h4>
         <p>Add a source of income to start tracking your earnings.</p>
         <button class="btn btn-primary btn-sm" data-modal-open="addIncomeModal">+ Add Income</button>
@@ -183,4 +188,4 @@ function openEditIncome(row) {
 }
 </script>
 
-<?php?>
+<?php require __DIR__ . '/includes/footer_app.php'; ?>
