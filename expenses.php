@@ -1,3 +1,66 @@
+<?php
+require_once __DIR__ . '/includes/auth_check.php';
+$currency = $user['currency'] ?: 'Rs';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'add' || $action === 'edit') {
+        $title = trim($_POST['title'] ?? '');
+        $amount = (float)($_POST['amount'] ?? 0);
+        $category_id = !empty($_POST['category_id']) ? (int)$_POST['category_id'] : null;
+        $entry_date = $_POST['entry_date'] ?? date('Y-m-d');
+        $note = trim($_POST['note'] ?? '');
+
+        if ($title === '' || $amount <= 0) {
+            flash('error', 'Please enter a valid title and amount.');
+        } elseif ($action === 'add') {
+            $stmt = mysqli_prepare($conn, "INSERT INTO expenses (user_id, category_id, title, amount, entry_date, note) VALUES (?,?,?,?,?,?)");
+            mysqli_stmt_bind_param($stmt, 'iisdss', $user['id'], $category_id, $title, $amount, $entry_date, $note);
+            mysqli_stmt_execute($stmt);
+            flash('success', 'Expense added.');
+        } else {
+            $id = (int)$_POST['id'];
+            $stmt = mysqli_prepare($conn, "UPDATE expenses SET category_id=?, title=?, amount=?, entry_date=?, note=? WHERE id=? AND user_id=?");
+            mysqli_stmt_bind_param($stmt, 'isdssii', $category_id, $title, $amount, $entry_date, $note, $id, $user['id']);
+            mysqli_stmt_execute($stmt);
+            flash('success', 'Expense updated.');
+        }
+    } elseif ($action === 'delete') {
+        $id = (int)$_POST['id'];
+        $stmt = mysqli_prepare($conn, "DELETE FROM expenses WHERE id=? AND user_id=?");
+        mysqli_stmt_bind_param($stmt, 'ii', $id, $user['id']);
+        mysqli_stmt_execute($stmt);
+        flash('success', 'Expense deleted.');
+    }
+    redirect('expenses.php' . (!empty($_POST['month_filter']) ? '?month=' . urlencode($_POST['month_filter']) : ''));
+}
+
+$month_filter = $_GET['month'] ?? '';
+$sql = "SELECT x.*, c.name AS cat_name, c.icon AS cat_icon FROM expenses x LEFT JOIN categories c ON x.category_id = c.id WHERE x.user_id = ?";
+$types = 'i'; $params = [$user['id']];
+if ($month_filter) {
+    $sql .= " AND DATE_FORMAT(x.entry_date, '%Y-%m') = ?";
+    $types .= 's'; $params[] = $month_filter;
+}
+$sql .= " ORDER BY x.entry_date DESC, x.id DESC";
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, $types, ...$params);
+mysqli_stmt_execute($stmt);
+$rows = mysqli_stmt_get_result($stmt);
+
+$total = get_total($conn, 'expenses', $user['id'], $month_filter ?: null);
+$categories = get_categories($conn, $user['id'], 'expense');
+$cat_list = [];
+while ($c = mysqli_fetch_assoc($categories)) $cat_list[] = $c;
+
+$page_title = 'Expenses';
+$page_sub = 'Track where your money goes';
+require __DIR__ . '/includes/head.php';
+require __DIR__ . '/includes/sidebar.php';
+require __DIR__ . '/includes/topbar.php';
+?>
+
 <div class="toolbar">
   <div class="filters">
     <form method="GET" id="filterForm">
@@ -120,3 +183,5 @@ function openEditExpense(row) {
   document.getElementById('editExpenseModal').classList.add('open');
 }
 </script>
+
+<?php require __DIR__ . '/includes/footer_app.php'; ?>
