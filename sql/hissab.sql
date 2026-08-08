@@ -3,8 +3,8 @@
 -- Database Schema for XAMPP / MySQL
 -- ============================================
 
-CREATE DATABASE IF NOT EXISTS try_db;
-USE try_db;
+CREATE DATABASE IF NOT EXISTS hisaab_db;
+USE hisaab_db;
 
 -- ---------- Users ----------
 CREATE TABLE IF NOT EXISTS users (
