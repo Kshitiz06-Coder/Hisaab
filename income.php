@@ -77,8 +77,10 @@ require __DIR__ . '/includes/topbar.php';
 <div class="card">
   <div class="card-body">
     <?php if (mysqli_num_rows($rows) === 0): ?>
-      <div class="empty-state">
-        <div class="emoji"><img src="img/Savings.png" alt="Income"></div>
+      <div class="empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 50px 20px; width: 100%;">
+        <div class="emoji" style="display: block; width: 100%; text-align: center; margin-bottom: 12px;">
+          <img src="img/Savings.png" style="width: 48px; height: 48px; display: inline-block; margin: 0 auto; object-fit: contain;">
+        </div>
         <h4>No income logged<?= $month_filter ? ' for this month' : '' ?></h4>
         <p>Add a source of income to start tracking your earnings.</p>
         <button class="btn btn-primary btn-sm" data-modal-open="addIncomeModal">+ Add Income</button>
