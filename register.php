@@ -4,7 +4,7 @@ require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/functions.php';
 require_once __DIR__ . '/config/mailer.php';
 
-if (!empty($_SESSION['user_id'])) redirect('dashboard.php');
+if (!empty($_SESSION['user_id'])) redirect('login.php');
 
 $errors = [];
 $full_name = $email = '';

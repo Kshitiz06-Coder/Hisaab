@@ -78,7 +78,7 @@ require __DIR__ . '/includes/topbar.php';
   <div class="card-body">
     <?php if (mysqli_num_rows($rows) === 0): ?>
       <div class="empty-state">
-        <div class="emoji"><img src="img/Savings.png" alt="Income">/div>
+        <div class="emoji"><img src="img/Savings.png" alt="Income"></div>
         <h4>No income logged<?= $month_filter ? ' for this month' : '' ?></h4>
         <p>Add a source of income to start tracking your earnings.</p>
         <button class="btn btn-primary btn-sm" data-modal-open="addIncomeModal">+ Add Income</button>
