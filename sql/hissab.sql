@@ -1,3 +1,8 @@
+-- ============================================
+-- Hissab - Sustainable Finance System
+-- Database Schema for XAMPP / MySQL
+-- ============================================
+
 CREATE DATABASE IF NOT EXISTS try_db;
 USE try_db;
 
