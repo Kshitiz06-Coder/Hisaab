@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <form method="POST" novalidate>
         <div class="field">
           <label for="full_name">Full name</label>
-          <input type="text" id="full_name" name="full_name" placeholder="e.g. Kabita Khadka" value="<?= e($full_name) ?>" required>
+          <input type="text" id="full_name" name="full_name" placeholder="Your Name" value="<?= e($full_name) ?>" required>
         </div>
         <div class="field">
           <label for="email">Email address</label>
