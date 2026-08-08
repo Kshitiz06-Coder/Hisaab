@@ -12,7 +12,7 @@
 
 <div class="container">
   <nav class="landing-nav">
-    <a href="index.php" class="brand"><span class="brand-mark"><img src="img/logo.png" alt="Hisaab Logo"></span> Hisaab</a>
+    <a href="index.php" class="brand"><span class="brand-mark"><img src="img/Logo.png" alt="Hisaab Logo"></span> Hisaab</a>
     <div class="nav-actions">
       <a href="login.php" class="btn btn-ghost">Log in</a>
       <a href="register.php" class="btn btn-primary">Get Started</a>

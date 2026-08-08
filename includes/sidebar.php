@@ -6,7 +6,7 @@ function nav_active($page, $current) { return $page === $current ? 'active' : ''
   <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">✕</button>
   <div class="sidebar-brand">
     <a href="dashboard.php" class="brand">
-      <span class="brand-mark"><img src="img/logo.png" alt="Hisaab Logo"></span> Hisaab
+      <span class="brand-mark"><img src="img/Logo.png" alt="Hisaab Logo"></span> Hisaab
     </a>
   </div>
   <nav class="sidebar-nav">
