@@ -5,7 +5,7 @@
 --  Skip this file if you're setting up the database fresh from the latest hissab.sql.)
 -- ============================================
 
-USE try_db;
+USE hisaab_db;
 
 ALTER TABLE users
   ADD COLUMN is_verified TINYINT(1) NOT NULL DEFAULT 0 AFTER password;

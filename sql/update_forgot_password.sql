@@ -4,7 +4,7 @@
 -- (do not re-import the full hissab.sql, this just adds one table)
 -- ============================================
 
-USE try_db;
+USE hisaab_db;
 
 CREATE TABLE IF NOT EXISTS password_resets (
     id INT AUTO_INCREMENT PRIMARY KEY,
