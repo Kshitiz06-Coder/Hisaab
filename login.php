@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/functions.php';
+require_once __DIR__ . '/config/mailer.php';
 
 if (!empty($_SESSION['user_id'])) redirect('dashboard.php');
 
@@ -19,6 +20,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $found = mysqli_fetch_assoc($result);
 
     if ($found && password_verify($password, $found['password'])) {
+        if ((int)$found['is_verified'] === 0) {
+            // Reuse an existing unexpired code if there is one, otherwise send a fresh one
+            $stmt2 = mysqli_prepare($conn, "SELECT * FROM password_resets WHERE user_id = ? AND purpose = 'register' ORDER BY id DESC LIMIT 1");
+            mysqli_stmt_bind_param($stmt2, 'i', $found['id']);
+            mysqli_stmt_execute($stmt2);
+            $existing_otp = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt2));
+
+            if (!$existing_otp || strtotime($existing_otp['expires_at']) < time()) {
+                issue_register_otp($conn, $found['id'], $found['email'], $found['full_name']);
+            }
+
+            $_SESSION['pending_verify_user_id'] = $found['id'];
+            $_SESSION['pending_verify_email'] = $found['email'];
+            flash('error', 'Please verify your email before logging in. We sent a code to ' . $found['email'] . '.');
+            redirect('verify-email.php');
+        }
         $_SESSION['user_id'] = $found['id'];
         redirect('dashboard.php');
     } else {
@@ -31,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hisaab</title>
+<title>Log In · Hissab</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -39,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-wrap">
   <div class="auth-visual">
     <a href="index.php" class="brand" style="color:#fff;">
-      <span class="brand-mark" style="background:rgba(255,255,255,.15);"><img src="Image/Logo.png" alt="Logo"></span> Hisaab
+      <span class="brand-mark" style="background:rgba(255,255,255,.15);">🌿</span> Hissab
     </a>
     <div>
       <h2>Welcome back to your financial dashboard.</h2>
@@ -48,13 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
   <div class="auth-form-side">
     <div class="auth-card">
-      <div class="brand" style="color:var(--green-700);"><span class="brand-mark"><img src="Image/Logo.png" alt="Logo"></span> Hisaab</div>
+      <div class="brand" style="color:var(--green-700);"><span class="brand-mark">🌿</span> Hissab</div>
       <h1>Log in</h1>
       <p class="subtitle">Enter your details to continue</p>
 
       <?php foreach ($errors as $err): ?>
         <div class="alert alert-error">⚠ <?= e($err) ?></div>
       <?php endforeach; ?>
+      <?php if ($ok = flash('success')): ?>
+        <div class="alert alert-success">✓ <?= e($ok) ?></div>
+      <?php endif; ?>
 
       <form method="POST" novalidate>
         <div class="field">
@@ -64,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="field">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" placeholder="Your password" required>
+          <div style="text-align:right;margin-top:6px;"><a href="forgot-password.php" style="font-size:12.5px;color:var(--green-700);font-weight:600;">Forgot password?</a></div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Log in</button>
       </form>

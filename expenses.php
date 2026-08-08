@@ -111,6 +111,7 @@ require __DIR__ . '/includes/topbar.php';
   </div>
 </div>
 
+<!-- Add Expense Modal -->
 <div class="modal-backdrop" id="addExpenseModal">
   <div class="modal">
     <div class="modal-head"><h3>Add Expense</h3><button class="modal-close" data-modal-close>✕</button></div>
@@ -141,6 +142,7 @@ require __DIR__ . '/includes/topbar.php';
   </div>
 </div>
 
+<!-- Edit Expense Modal -->
 <div class="modal-backdrop" id="editExpenseModal">
   <div class="modal">
     <div class="modal-head"><h3>Edit Expense</h3><button class="modal-close" data-modal-close>✕</button></div>

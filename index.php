@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hisaab · Sustainable Finance System</title>
+<title>Hissab · Sustainable Finance System</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -12,7 +12,7 @@
 
 <div class="container">
   <nav class="landing-nav">
-    <a href="index.php" class="brand"><span class="brand-mark"><img src="./Image/Logo.png"></span> Hisaab</a>
+    <a href="index.php" class="brand"><span class="brand-mark">🌿</span> Hissab</a>
     <div class="nav-actions">
       <a href="login.php" class="btn btn-ghost">Log in</a>
       <a href="register.php" class="btn btn-primary">Get Started</a>
@@ -27,10 +27,10 @@
     <div>
       <span class="hero-eyebrow">🌱 Sustainable Finance System</span>
       <h1>Made simple <span>for everyday</span> users</h1>
-      <p class="lead">Hisaab helps you track income, control expenses, and grow your savings — one clean dashboard, zero spreadsheet headaches.</p>
+      <p class="lead">Hissab helps you track income, control expenses, and grow your savings — one clean dashboard, zero spreadsheet headaches.</p>
       <div class="hero-cta">
         <a href="register.php" class="btn btn-primary">Start Free Today</a>
-        <a href="login.php" class="btn btn-outline">Already have an account?</a>
+        <a href="login.php" class="btn btn-outline">I already have an account</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -62,17 +62,17 @@
     </div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="feature-icon"><img src="./Image/Income.png"></div>
+        <div class="feature-icon">💵</div>
         <h3>Track Income</h3>
         <p>Log every source of income — salary, freelance, business — and see it roll up automatically.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon"><img src="./Image/Expense.png"></div>
+        <div class="feature-icon">🧾</div>
         <h3>Manage Expenses</h3>
         <p>Categorize spending, spot patterns, and catch overspending before it becomes a habit.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon"><img src="./Image/Savings.png"></div>
+        <div class="feature-icon">🎯</div>
         <h3>Set Savings Goals</h3>
         <p>Give every rupee a job. Set targets, track progress, and celebrate milestones.</p>
       </div>
@@ -89,7 +89,7 @@
 </div>
 
 <footer class="site-footer">
-  © <?= date('Y') ?> Hisaab — Sustainable Finance System. Built as a college project.
+  © <?= date('Y') ?> Hissab — Sustainable Finance System. Built as a college project.
 </footer>
 
 </body>
