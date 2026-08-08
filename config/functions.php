@@ -1,4 +1,7 @@
 <?php
+/**
+ * Hissab - Shared helper functions
+ */
 
 function e($str) {
     return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
@@ -58,6 +61,10 @@ function current_user($conn) {
 function redirect($path) {
     header("Location: $path");
     exit;
+}
+
+function generate_otp() {
+    return str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 }
 
 function time_ago($datetime) {

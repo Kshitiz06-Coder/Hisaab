@@ -1,10 +1,5 @@
--- ============================================
--- Hisaab - Sustainable Finance System
--- Database Schema for XAMPP / MySQL
--- ============================================
-
-CREATE DATABASE IF NOT EXISTS hisaab_db;
-USE hisaab_db;
+CREATE DATABASE IF NOT EXISTS try_db;
+USE try_db;
 
 -- ---------- Users ----------
 CREATE TABLE IF NOT EXISTS users (
@@ -12,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    is_verified TINYINT(1) NOT NULL DEFAULT 0,
     currency VARCHAR(10) DEFAULT 'Rs',
     avatar_color VARCHAR(10) DEFAULT '#16A34A',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -63,6 +59,18 @@ CREATE TABLE IF NOT EXISTS savings (
     target_amount DECIMAL(12,2) NOT NULL,
     saved_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
     deadline DATE NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------- Password Reset OTPs ----------
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    otp_code VARCHAR(6) NOT NULL,
+    purpose ENUM('register','reset') NOT NULL DEFAULT 'reset',
+    expires_at DATETIME NOT NULL,
+    is_verified TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
