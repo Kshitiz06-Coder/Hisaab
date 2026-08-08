@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/functions.php';
 
-if (!empty($_SESSION['user_id'])) redirect('dashboard.php');
+if (!empty($_SESSION['user_id'])) redirect('login.php');
 
 $errors = [];
 $full_name = $email = '';
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (mysqli_stmt_execute($stmt)) {
             $_SESSION['user_id'] = mysqli_insert_id($conn);
             flash('success', 'Welcome to Hissab, ' . $full_name . '! Your account is ready.');
-            redirect('dashboard.php');
+            redirect('login.php');
         } else {
             $errors[] = 'Something went wrong. Please try again.';
         }
