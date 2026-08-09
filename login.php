@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Log In · Hisaab</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/addon.css">
 </head>
 <body>
 <div class="auth-wrap">
@@ -83,7 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Your password" required>
+          <div class="password-wrap">
+            <input type="password" id="password" name="password" placeholder="Your password" required>
+            <button type="button" class="toggle-password" data-target="password" aria-label="Show password">👁️</button>
+          </div>
           <div style="text-align:right;margin-top:6px;"><a href="forgot-password.php" style="font-size:12.5px;color:var(--green-700);font-weight:600;">Forgot password?</a></div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Log in</button>
@@ -92,5 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </div>
+<script src="js/password-toggle.js"></script>
 </body>
 </html>

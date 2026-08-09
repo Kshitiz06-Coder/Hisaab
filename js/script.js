@@ -1,6 +1,3 @@
-// ============================================
-// HISSAB — UI behaviors
-// ============================================
 
 document.addEventListener('DOMContentLoaded', function () {
   // --- Sidebar toggle (mobile) ---

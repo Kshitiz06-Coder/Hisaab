@@ -1,6 +1,3 @@
-// ============================================
-// HISSAB — Profile dropdown menu (topbar avatar)
-// ============================================
 
 document.addEventListener('DOMContentLoaded', function () {
   var btn = document.getElementById('profileMenuBtn');

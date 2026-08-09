@@ -29,6 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    
+    if (!$errors) {
+        require_once __DIR__ . '/config/email_verify_api.php';
+        $isReal = verify_email_real($email);
+        if ($isReal === false) {
+            $errors[] = 'This email address could not be verified as a real, deliverable mailbox. Please use a different address.';
+        }
+    }
+
     $existing = null;
     if (!$errors) {
         $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE email = ?");
@@ -101,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <form method="POST" novalidate>
         <div class="field">
           <label for="full_name">Full name</label>
-          <input type="text" id="full_name" name="full_name" placeholder="Your Name" value="<?= e($full_name) ?>" required>
+          <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" value="<?= e($full_name) ?>" required>
         </div>
         <div class="field">
           <label for="email">Email address</label>
@@ -109,11 +118,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="At least 6 characters" required minlength="6">
+          <div class="password-wrap">
+            <input type="password" id="password" name="password" placeholder="At least 6 characters" required minlength="6">
+            <button type="button" class="toggle-password" data-target="password" aria-label="Show password">👁️</button>
+          </div>
         </div>
         <div class="field">
           <label for="confirm_password">Confirm password</label>
-          <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required minlength="6">
+          <div class="password-wrap">
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required minlength="6">
+            <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Show password">👁️</button>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Create account</button>
       </form>
@@ -121,5 +136,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </div>
+<script src="js/password-toggle.js"></script>
 </body>
 </html>

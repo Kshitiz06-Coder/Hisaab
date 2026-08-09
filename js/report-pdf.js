@@ -1,11 +1,4 @@
-/**
- * Hissab — PDF report generator
- * Requires jsPDF (loaded via CDN in reports.php) — produces a real
- * text-based PDF (not a screenshot) from the report data passed in.
- *
- * Usage: downloadHissabReportPDF(reportDataObject)
- * See reports.php for the shape of reportDataObject.
- */
+
 function downloadHissabReportPDF(data) {
   var jsPDFCtor = window.jspdf.jsPDF;
   var doc = new jsPDFCtor({ unit: 'pt', format: 'a4' });

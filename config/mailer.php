@@ -5,17 +5,6 @@
  *
  * PHPMailer is NOT bundled here — install it one of two ways:
  *
- *   A) Composer (recommended):
- *      composer require phpmailer/phpmailer
- *      -> creates vendor/autoload.php, which this file auto-detects.
- *
- *   B) Manual (no Composer):
- *      Download https://github.com/PHPMailer/PHPMailer (Code -> Download ZIP)
- *      Copy these 3 files from its `src/` folder into:
- *          hissab/libs/PHPMailer/src/Exception.php
- *          hissab/libs/PHPMailer/src/PHPMailer.php
- *          hissab/libs/PHPMailer/src/SMTP.php
- *      -> this file auto-detects that folder too.
  */
 
 require_once __DIR__ . '/mail_config.php';
