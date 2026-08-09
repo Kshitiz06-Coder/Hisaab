@@ -75,7 +75,7 @@ require __DIR__ . '/includes/topbar.php';
       <?php if (empty($exp_rows)): ?>
        <div class="empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 50px 20px; width: 100%;">
         <div class="emoji" style="display: block; width: 100%; text-align: center; margin-bottom: 12px;">
-          <img src="img/Income.png" style="width: 48px; height: 48px; display: inline-block; margin: 0 auto; object-fit: contain;">
+          <img src="img/Expense.png" alt="Expense" style="width: 48px; height: 48px; display: inline-block; margin: 0 auto; object-fit: contain;">
         </div><p>No expenses recorded for this month.</p></div>
       <?php else: foreach ($exp_rows as $r): ?>
         <div class="category-bar-row">
@@ -91,7 +91,11 @@ require __DIR__ . '/includes/topbar.php';
     <div class="card-head"><h3>Income by category</h3></div>
     <div class="card-body">
       <?php if (empty($inc_rows)): ?>
-        <div class="empty-state"><div class="emoji">💵</div><p>No income recorded for this month.</p></div>
+         <div class="empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 50px 20px; width: 100%;">
+        <div class="emoji" style="display: block; width: 100%; text-align: center; margin-bottom: 12px;">
+          <img src="img/Income.png" alt="Income" style="width: 48px; height: 48px; display: inline-block; margin: 0 auto; object-fit: contain;">
+          <p>No income recorded for this month.</p></div>
+        </div>
       <?php else: foreach ($inc_rows as $r): ?>
         <div class="category-bar-row">
           <div class="cat-label"><?= e($r['icon']) ?> <?= e($r['name']) ?></div>
