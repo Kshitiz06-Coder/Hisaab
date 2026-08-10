@@ -81,14 +81,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <label for="password">New password</label>
           <div class="password-wrap">
             <input type="password" id="password" name="password" placeholder="At least 6 characters" minlength="6" required>
-            <button type="button" class="toggle-password" data-target="password" aria-label="Show password"><img src="img/show.png" alt="show"></button>
+            <button type="button" class="toggle-password" data-target="password" aria-label="Show password"><img src="img/show.png" alt="show" width="30" height="30"></button>
           </div>
         </div>
         <div class="field">
           <label for="confirm_password">Confirm new password</label>
           <div class="password-wrap">
             <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" minlength="6" required>
-            <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Show password"><img src="img/show.png" alt="show"></button>
+           <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Show password"><img src="img/show.png" alt="show" width="30" height="30"></button>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Reset password</button>
