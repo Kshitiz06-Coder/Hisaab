@@ -14,6 +14,6 @@
  * Never commit real credentials to a public repo (e.g. GitHub).
  */
 
-define('GMAIL_ADDRESS', 'kshitizkhatiwada787@gmail.com');
-define('GMAIL_APP_PASSWORD', 'zkqj prhh mbsc kyng');
+define('GMAIL_ADDRESS', 'hisaabfinancetracker@gmail.com');
+define('GMAIL_APP_PASSWORD', 'urnk ufns udld yxbn');
 define('MAIL_FROM_NAME', 'Hisaab');

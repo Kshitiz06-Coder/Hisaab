@@ -91,7 +91,7 @@ require __DIR__ . '/includes/topbar.php';
         <div class="tx-list">
         <?php while ($tx = mysqli_fetch_assoc($recent)): ?>
           <div class="tx-row">
-            <div class="tx-ic <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '💵' : '🧾' ?></div>
+            <div class="tx-ic <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '<img src="img/Savings.png" alt="Income">' : '<img src="img/Expense.png" alt="Expense">' ?></div>
             <div class="tx-info">
               <div class="tx-title"><?= e($tx['title']) ?></div>
               <div class="tx-meta"><?= date('M j, Y', strtotime($tx['entry_date'])) ?></div>

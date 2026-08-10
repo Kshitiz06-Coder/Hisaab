@@ -47,9 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_execute($del);
 
             unset($_SESSION['pending_verify_user_id'], $_SESSION['pending_verify_email']);
-            $_SESSION['user_id'] = $user_id;
-            flash('success', 'Email verified! Welcome to Hissab.');
-            redirect('dashboard.php');
+            // Session assignment removed so they have to log in manually
+            flash('success', 'Email verified! Please log in to access your dashboard.');
+            redirect('login.php');
         }
     }
 }

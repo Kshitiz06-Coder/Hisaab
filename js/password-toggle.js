@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       var showing = input.type === 'text';
       input.type = showing ? 'password' : 'text';
-      btn.textContent = showing ? '👁️' : '🙈';
+      btn.textContent = showing ? '' : '';
       btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
       btn.setAttribute('aria-pressed', showing ? 'false' : 'true');
     });

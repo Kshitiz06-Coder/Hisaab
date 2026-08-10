@@ -4,7 +4,7 @@ require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/config/functions.php';
 require_once __DIR__ . '/config/mailer.php';
 
-if (!empty($_SESSION['user_id'])) redirect('dashboard.php');
+if (!empty($_SESSION['user_id'])) redirect('login.php');
 
 $errors = [];
 $full_name = $email = '';
@@ -120,14 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <label for="password">Password</label>
           <div class="password-wrap">
             <input type="password" id="password" name="password" placeholder="At least 6 characters" required minlength="6">
-            <button type="button" class="toggle-password" data-target="password" aria-label="Show password">👁️</button>
+            <button type="button" class="toggle-password" data-target="password" aria-label="Show password"></button>
           </div>
         </div>
         <div class="field">
           <label for="confirm_password">Confirm password</label>
           <div class="password-wrap">
             <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required minlength="6">
-            <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Show password">👁️</button>
+            <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Show password"></button>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Create account</button>

@@ -62,7 +62,7 @@
     </div>
     <div class="feature-grid">
       <div class="feature-card">
-        <div class="feature-icon"><img src="img/Savings.png" alt="Income"></div>
+        <div class="feature-icon"><img src="img/Income.png" alt="Income"></div>
         <h3>Track Income</h3>
         <p>Log every source of income — salary, freelance, business — and see it roll up automatically.</p>
       </div>
@@ -72,7 +72,7 @@
         <p>Categorize spending, spot patterns, and catch overspending before it becomes a habit.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon"><img src="img/Income.png" alt="Savings"></div>
+        <div class="feature-icon"><img src="img/Savings.png" alt="Savings"></div>
         <h3>Set Savings Goals</h3>
         <p>Give every rupee a job. Set targets, track progress, and celebrate milestones.</p>
       </div>

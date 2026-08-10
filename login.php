@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <label for="password">Password</label>
           <div class="password-wrap">
             <input type="password" id="password" name="password" placeholder="Your password" required>
-            <button type="button" class="toggle-password" data-target="password" aria-label="Show password">👁️</button>
+            <button type="button" class="toggle-password" data-target="password" aria-label="Show password"></button>
           </div>
           <div style="text-align:right;margin-top:6px;"><a href="forgot-password.php" style="font-size:12.5px;color:var(--green-700);font-weight:600;">Forgot password?</a></div>
         </div>
