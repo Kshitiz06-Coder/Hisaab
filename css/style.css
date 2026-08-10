@@ -193,6 +193,11 @@ img { max-width: 100%; display: block; }
 .form-foot { text-align: center; margin-top: 18px; font-size: 14px; color: var(--ink-500); }
 .form-foot a { color: var(--green-700); font-weight: 600; }
 
+.field:has(input[required]) label::after {
+    content: " *";
+    color: #dc2626;
+}
+
 .alert {
   padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; margin-bottom: 18px;
   display: flex; align-items: center; gap: 8px;
