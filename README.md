@@ -1,4 +1,4 @@
-# Hissab — Sustainable Finance System
+# Hisaab — Sustainable Finance System
 
 A full-stack income & expense tracker built with **HTML, CSS, JavaScript, and PHP**, backed by **MySQL** via **XAMPP**. Matches the Figma flow: Main Page → Register/Login → Dashboard → Income / Expenses / Savings / Reports → Settings.
 
@@ -8,11 +8,11 @@ A full-stack income & expense tracker built with **HTML, CSS, JavaScript, and PH
 ## 2. Setup
 
 1. **Copy the project folder**
-   Copy the whole `hissab` folder into your XAMPP `htdocs` directory, e.g.:
+   Copy the whole `hisaab` folder into your XAMPP `htdocs` directory, e.g.:
    ```
-   C:\xampp\htdocs\hissab      (Windows)
-   /Applications/XAMPP/htdocs/hissab   (Mac)
-   /opt/lampp/htdocs/hissab    (Linux)
+   C:\xampp\htdocs\hisaab      (Windows)
+   /Applications/XAMPP/htdocs/hisaab   (Mac)
+   /opt/lampp/htdocs/hisaab    (Linux)
    ```
 
 2. **Start XAMPP**
@@ -20,8 +20,8 @@ A full-stack income & expense tracker built with **HTML, CSS, JavaScript, and PH
 
 3. **Create the database**
    - Go to [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
-   - Click **Import** → choose `sql/hissab.sql` → click **Go**
-   - This creates the `hissab_db` database with all tables and default categories.
+   - Click **Import** → choose `sql/hisaab.sql` → click **Go**
+   - This creates the `hisaab_db` database with all tables and default categories.
 
    *(Alternative: open the SQL tab in phpMyAdmin and paste the contents of `sql/hissab.sql`.)*
 
@@ -31,19 +31,19 @@ A full-stack income & expense tracker built with **HTML, CSS, JavaScript, and PH
    $DB_HOST = 'localhost';
    $DB_USER = 'root';
    $DB_PASS = '';
-   $DB_NAME = 'hissab_db';
+   $DB_NAME = 'hisaab_db';
    ```
    Change these only if your MySQL setup uses a different user/password.
 
 5. **Open the app**
-   Visit: [http://localhost/hissab/](http://localhost/hissab/)
+   Visit: [http://localhost/hisaab/](http://localhost/hisaab/)
 
    Click **Get Started** to register your first account, then you're straight into the dashboard.
 
 ## 3. Project structure
 
 ```
-hissab/
+hisaab/
 ├── index.php              Landing page
 ├── register.php           Sign up
 ├── login.php               Log in
