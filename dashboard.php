@@ -44,7 +44,7 @@ require __DIR__ . '/includes/topbar.php';
   <div class="stat-card">
     <div class="stat-top">
       <div><div class="stat-label">Income this month</div><div class="stat-value"><?= money($total_income, $currency) ?></div></div>
-      <div class="stat-icon income"><img src="img/Income.png" alt="Income"></div>
+      <div class="stat-icon income"><img src="img/Savings.png" alt="Income"></div>
     </div>
     <span class="stat-trend up">↑ All-time: <?= money($all_income_ever, $currency) ?></span>
   </div>
@@ -58,7 +58,7 @@ require __DIR__ . '/includes/topbar.php';
   <div class="stat-card">
     <div class="stat-top">
       <div><div class="stat-label">Net balance</div><div class="stat-value" style="color:<?= $balance >= 0 ? 'var(--green-700)' : 'var(--red-600)' ?>;"><?= money($balance, $currency) ?></div></div>
-      <div class="stat-icon balance"><img src="img/Savings.png" alt="Savings"></div>
+      <div class="stat-icon balance"><img src="img/Income.png" alt="Savings"></div>
     </div>
     <span class="stat-trend <?= $balance >= 0 ? 'up' : 'down' ?>"><?= $balance >= 0 ? '✓ Healthy' : '⚠ Overspending' ?></span>
   </div>
@@ -91,7 +91,7 @@ require __DIR__ . '/includes/topbar.php';
         <div class="tx-list">
         <?php while ($tx = mysqli_fetch_assoc($recent)): ?>
           <div class="tx-row">
-            <div class="tx-ic <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '<img src="img/Income.png" alt="Income">' : '<img src="img/Expense.png" alt="Expense">' ?></div>
+            <div class="tx-ic <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '<img src="img/Savings.png" alt="Income">' : '<img src="img/Expense.png" alt="Expense">' ?></div>
             <div class="tx-info">
               <div class="tx-title"><?= e($tx['title']) ?></div>
               <div class="tx-meta"><?= date('M j, Y', strtotime($tx['entry_date'])) ?></div>
@@ -107,10 +107,6 @@ require __DIR__ . '/includes/topbar.php';
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <script>
-const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-const chartTextColor = isDark ? '#b8c4d1' : '#667085';
-const chartGridColor = isDark ? '#232c38' : '#eef1f4';
-
 const ctx = document.getElementById('cashFlowChart');
 new Chart(ctx, {
   type: 'line',
@@ -135,11 +131,8 @@ new Chart(ctx, {
   },
   options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 12 }, color: chartTextColor } } },
-    scales: {
-      y: { beginAtZero: true, grid: { color: chartGridColor }, ticks: { color: chartTextColor } },
-      x: { grid: { display: false }, ticks: { color: chartTextColor } }
-    }
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 12 } } } },
+    scales: { y: { beginAtZero: true, grid: { color: '#eef1f4' } }, x: { grid: { display: false } } }
   }
 });
 </script>
