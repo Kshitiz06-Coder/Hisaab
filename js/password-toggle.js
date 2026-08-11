@@ -12,9 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
       // Toggle the input type
       input.type = showing ? 'password' : 'text';
       
-      // Swap the image source directly
+      // Swap the image source, preserving whatever folder depth this page is at
+      // (e.g. "img/show.png" on root pages, "../img/show.png" from admin/ pages)
       if (img) {
-          img.src = showing ? 'img/show.png' : 'img/hide.png';
+          img.src = img.src.replace(/(show|hide)\.png(\?.*)?$/, (showing ? 'show.png' : 'hide.png'));
       }
       
       btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');

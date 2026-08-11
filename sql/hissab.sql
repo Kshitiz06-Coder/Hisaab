@@ -13,6 +13,10 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     is_verified TINYINT(1) NOT NULL DEFAULT 0,
+    is_banned TINYINT(1) NOT NULL DEFAULT 0,
+    ban_reason VARCHAR(255) NULL,
+    banned_at TIMESTAMP NULL,
+    warning_count INT NOT NULL DEFAULT 0,
     currency VARCHAR(10) DEFAULT 'Rs',
     avatar_color VARCHAR(10) DEFAULT '#16A34A',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -78,6 +82,26 @@ CREATE TABLE IF NOT EXISTS password_resets (
     is_verified TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------- Admins (separate login from regular users) ----------
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- ---------- Warning log (audit trail) ----------
+CREATE TABLE IF NOT EXISTS user_warnings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    admin_id INT NULL,
+    reason VARCHAR(500) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- ---------- Default categories ----------

@@ -82,3 +82,90 @@ function issue_register_otp($conn, $user_id, $email, $name) {
 
     return send_otp_email($email, $name, $otp);
 }
+
+/**
+ * Shared wrapper for the admin-panel notification emails below.
+ * Keeps a consistent look without repeating the HTML shell each time.
+ */
+function send_admin_notice_email($toEmail, $toName, $subject, $accentColor, $heading, $bodyHtml, $altText) {
+    if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+        error_log('Hissab mailer: PHPMailer is not installed. See config/mailer.php for setup instructions.');
+        return false;
+    }
+
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = GMAIL_ADDRESS;
+        $mail->Password = GMAIL_APP_PASSWORD;
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom(GMAIL_ADDRESS, MAIL_FROM_NAME);
+        $mail->addAddress($toEmail, $toName);
+        $mail->addReplyTo(GMAIL_ADDRESS, MAIL_FROM_NAME);
+
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = '
+            <div style="font-family:Arial,sans-serif;max-width:460px;margin:auto;padding:28px;border:1px solid #eee;border-radius:14px;">
+                <h2 style="color:' . $accentColor . ';margin:0 0 8px;">Hisaab</h2>
+                <p style="color:#333;">Hi ' . htmlspecialchars($toName) . ',</p>
+                <h3 style="color:#222;margin:14px 0 6px;">' . htmlspecialchars($heading) . '</h3>
+                ' . $bodyHtml . '
+                <p style="color:#888;font-size:12.5px;margin-top:22px;">This is an automated notice from the Hisaab administration team.</p>
+            </div>';
+        $mail->AltBody = $altText;
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log('Hisaab mailer error: ' . $mail->ErrorInfo);
+        return false;
+    }
+}
+
+/** Sent when an admin issues a warning to a user's account. */
+function send_warning_email($toEmail, $toName, $reason) {
+    $body = '<p style="color:#333;">Your Hisaab account has received a warning:</p>
+        <div style="background:#fffbeb;color:#92400e;padding:14px 16px;border-radius:10px;margin:14px 0;font-size:14.5px;">' . nl2br(htmlspecialchars($reason)) . '</div>
+        <p style="color:#333;">Please review our usage guidelines. Repeated or serious violations may result in your account being suspended.</p>';
+    return send_admin_notice_email(
+        $toEmail, $toName,
+        'Warning issued to your Hisaab account',
+        '#d97706',
+        '⚠ Account warning',
+        $body,
+        "Your Hisaab account has received a warning: $reason. Repeated or serious violations may result in suspension."
+    );
+}
+
+/** Sent when an admin bans a user's account. */
+function send_ban_email($toEmail, $toName, $reason) {
+    $body = '<p style="color:#333;">Your Hisaab account has been <strong>suspended</strong> by an administrator.</p>
+        <div style="background:#fef2f2;color:#991b1b;padding:14px 16px;border-radius:10px;margin:14px 0;font-size:14.5px;"><strong>Reason:</strong> ' . nl2br(htmlspecialchars($reason)) . '</div>
+        <p style="color:#333;">You will not be able to log in while your account is suspended. If you believe this was a mistake, please contact the administrator.</p>';
+    return send_admin_notice_email(
+        $toEmail, $toName,
+        'Your Hisaab account has been suspended',
+        '#dc2626',
+        '🚫 Account suspended',
+        $body,
+        "Your Hisaab account has been suspended. Reason: $reason. You will not be able to log in until it is reinstated."
+    );
+}
+
+/** Sent when an admin lifts a ban and restores account access. */
+function send_unban_email($toEmail, $toName) {
+    $body = '<p style="color:#333;">Good news — your Hisaab account access has been <strong>restored</strong>. You can log in normally again.</p>';
+    return send_admin_notice_email(
+        $toEmail, $toName,
+        'Your Hisaab account has been reinstated',
+        '#16a34a',
+        '✅ Account reinstated',
+        $body,
+        'Your Hisaab account access has been restored and you can log in normally again.'
+    );
+}

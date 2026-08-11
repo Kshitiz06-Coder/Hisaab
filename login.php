@@ -20,7 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $found = mysqli_fetch_assoc($result);
 
     if ($found && password_verify($password, $found['password'])) {
-        if ((int)$found['is_verified'] === 0) {
+        if ((int)$found['is_banned'] === 1) {
+            $reason = $found['ban_reason'] ? ' Reason: ' . $found['ban_reason'] : '';
+            $errors[] = 'Your account has been suspended by an administrator.' . $reason;
+        } elseif ((int)$found['is_verified'] === 0) {
             // Reuse an existing unexpired code if there is one, otherwise send a fresh one
             $stmt2 = mysqli_prepare($conn, "SELECT * FROM password_resets WHERE user_id = ? AND purpose = 'register' ORDER BY id DESC LIMIT 1");
             mysqli_stmt_bind_param($stmt2, 'i', $found['id']);
@@ -35,9 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['pending_verify_email'] = $found['email'];
             flash('error', 'Please verify your email before logging in. We sent a code to ' . $found['email'] . '.');
             redirect('verify-email.php');
+        } else {
+            $_SESSION['user_id'] = $found['id'];
+            redirect('dashboard.php');
         }
-        $_SESSION['user_id'] = $found['id'];
-        redirect('dashboard.php');
     } else {
         $errors[] = 'Incorrect email or password.';
     }
