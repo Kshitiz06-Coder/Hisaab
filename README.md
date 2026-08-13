@@ -1,46 +1,11 @@
 # Hisaab — Sustainable Finance System
 
-A full-stack income & expense tracker built with **HTML, CSS, JavaScript, and PHP**, backed by **MySQL** via **XAMPP**. Matches the Figma flow: Main Page → Register/Login → Dashboard → Income / Expenses / Savings / Reports → Settings.
+A full-stack income & expense tracker built with **HTML, CSS, JavaScript, and PHP**, backed by **MySQL** via **XAMPP**.
 
 ## 1. Requirements
 - [XAMPP](https://www.apachefriends.org/) (Apache + MySQL + PHP 7.4+)
 
-## 2. Setup
-
-1. **Copy the project folder**
-   Copy the whole `hisaab` folder into your XAMPP `htdocs` directory, e.g.:
-   ```
-   C:\xampp\htdocs\hisaab      (Windows)
-   /Applications/XAMPP/htdocs/hisaab   (Mac)
-   /opt/lampp/htdocs/hisaab    (Linux)
-   ```
-
-2. **Start XAMPP**
-   Open the XAMPP Control Panel and start **Apache** and **MySQL**.
-
-3. **Create the database**
-   - Go to [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
-   - Click **Import** → choose `sql/hisaab.sql` → click **Go**
-   - This creates the `hisaab_db` database with all tables and default categories.
-
-   *(Alternative: open the SQL tab in phpMyAdmin and paste the contents of `sql/hissab.sql`.)*
-
-4. **Check the DB connection**
-   Open `config/db.php` — the defaults match a stock XAMPP install:
-   ```php
-   $DB_HOST = 'localhost';
-   $DB_USER = 'root';
-   $DB_PASS = '';
-   $DB_NAME = 'hisaab_db';
-   ```
-   Change these only if your MySQL setup uses a different user/password.
-
-5. **Open the app**
-   Visit: [http://localhost/hisaab/](http://localhost/hisaab/)
-
-   Click **Get Started** to register your first account, then you're straight into the dashboard.
-
-## 3. Project structure
+## 2. Project structure
 
 ```
 hisaab/
@@ -65,7 +30,7 @@ hisaab/
 └── sql/hissab.sql           Database schema + seed categories
 ```
 
-## 4. Features implemented
+## 3. Features implemented
 - Secure auth: `password_hash()` / `password_verify()`, prepared statements everywhere (SQL-injection safe)
 - Session-based access control (`includes/auth_check.php`)
 - Income & Expense tracking with categories, notes, monthly filtering, edit/delete modals
@@ -75,7 +40,7 @@ hisaab/
 - Settings: edit profile, change password, set currency symbol
 - Fully responsive: collapsible sidebar / hamburger menu below 768px, stacking grids, scrollable tables on small screens
 
-## 5. Notes for your report / demo
+## 4. Notes for your report / demo
 - Passwords are hashed with PHP's built-in bcrypt (`PASSWORD_DEFAULT`) — never stored in plain text.
 - All database queries use **prepared statements** (`mysqli_prepare` + `bind_param`) to prevent SQL injection.
 - Each protected page starts a session and checks `$_SESSION['user_id']`; users can only see/edit their own rows (every query is scoped by `user_id`).
