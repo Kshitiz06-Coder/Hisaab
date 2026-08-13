@@ -45,6 +45,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_bind_param($stmt, 'si', $currency, $user['id']);
         mysqli_stmt_execute($stmt);
         flash('success', 'Preferences saved.');
+    } elseif ($action === 'update_notifications') {
+        $notify_daily = isset($_POST['notify_daily']) ? 1 : 0;
+        $notify_weekly = isset($_POST['notify_weekly']) ? 1 : 0;
+        $stmt = mysqli_prepare($conn, "UPDATE users SET notify_daily=?, notify_weekly=? WHERE id=?");
+        mysqli_stmt_bind_param($stmt, 'iii', $notify_daily, $notify_weekly, $user['id']);
+        mysqli_stmt_execute($stmt);
+        flash('success', 'Notification preferences saved.');
     }
     redirect('settings.php');
 }
@@ -61,6 +68,7 @@ require __DIR__ . '/includes/topbar.php';
     <a href="#" data-tab-target="tab-profile" class="active">👤 Profile</a>
     <a href="#" data-tab-target="tab-security">🔒 Security</a>
     <a href="#" data-tab-target="tab-preferences">⚙️ Preferences</a>
+    <a href="#" data-tab-target="tab-notifications">🔔 Notifications</a>
   </div>
 
   <div>
@@ -112,6 +120,42 @@ require __DIR__ . '/includes/topbar.php';
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Save preferences</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-panel" id="tab-notifications">
+      <div class="card">
+        <div class="card-head"><h3>Email reports</h3></div>
+        <div class="card-body">
+          <p style="color:var(--ink-500);font-size:13.5px;margin-bottom:18px;">Get your income/expense summary sent to <strong><?= e($user['email']) ?></strong> automatically. Toggle either one on — you can turn them off anytime.</p>
+          <form method="POST">
+            <input type="hidden" name="action" value="update_notifications">
+
+            <label class="notify-row">
+              <div>
+                <div class="notify-row-title">📅 Daily report</div>
+                <div class="notify-row-desc">A short summary of that day's income and expenses, sent every evening.</div>
+              </div>
+              <span class="switch">
+                <input type="checkbox" name="notify_daily" <?= $user['notify_daily'] ? 'checked' : '' ?>>
+                <span class="switch-track"><span class="switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <label class="notify-row">
+              <div>
+                <div class="notify-row-title">🗓️ Weekly report</div>
+                <div class="notify-row-desc">A rollup of the past 7 days — total income, expenses, net balance, and top categories.</div>
+              </div>
+              <span class="switch">
+                <input type="checkbox" name="notify_weekly" <?= $user['notify_weekly'] ? 'checked' : '' ?>>
+                <span class="switch-track"><span class="switch-thumb"></span></span>
+              </span>
+            </label>
+
+            <button type="submit" class="btn btn-primary" style="margin-top:8px;">Save notification preferences</button>
           </form>
         </div>
       </div>

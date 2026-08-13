@@ -169,3 +169,59 @@ function send_unban_email($toEmail, $toName) {
         'Your Hisaab account access has been restored and you can log in normally again.'
     );
 }
+
+/**
+ * Renders and sends a daily or weekly income/expense summary email.
+ * $summary = ['income' => float, 'expense' => float, 'currency' => string,
+ *             'periodLabel' => string, 'topCategories' => [['name'=>..,'icon'=>..,'total'=>..], ...]]
+ */
+function send_report_email($toEmail, $toName, $kind, $summary) {
+    $isDaily = $kind === 'daily';
+    $net = $summary['income'] - $summary['expense'];
+    $netColor = $net >= 0 ? '#16a34a' : '#dc2626';
+    $cur = $summary['currency'];
+
+    $catRows = '';
+    foreach ($summary['topCategories'] as $c) {
+        $catRows .= '<tr>
+            <td style="padding:6px 0;color:#333;font-size:13.5px;">' . htmlspecialchars($c['icon'] . ' ' . $c['name']) . '</td>
+            <td style="padding:6px 0;text-align:right;color:#333;font-size:13.5px;">' . htmlspecialchars($cur) . ' ' . number_format($c['total'], 2) . '</td>
+        </tr>';
+    }
+    if ($catRows === '') {
+        $catRows = '<tr><td colspan="2" style="padding:6px 0;color:#999;font-size:13px;">No expenses recorded in this period.</td></tr>';
+    }
+
+    $heading = $isDaily ? '📅 Your daily report' : '🗓️ Your weekly report';
+    $subject = $isDaily ? 'Hisaab — your daily report' : 'Hisaab — your weekly report';
+
+    $body = '
+        <p style="color:#333;">Here\'s your ' . ($isDaily ? 'summary for today' : 'summary for the past 7 days') . ' (' . htmlspecialchars($summary['periodLabel']) . '):</p>
+        <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+            <tr>
+                <td style="padding:10px;background:#f0fdf4;border-radius:8px 0 0 8px;text-align:center;">
+                    <div style="font-size:11px;color:#157347;text-transform:uppercase;">Income</div>
+                    <div style="font-size:16px;font-weight:700;color:#157347;">' . htmlspecialchars($cur) . ' ' . number_format($summary['income'], 2) . '</div>
+                </td>
+                <td style="padding:10px;background:#fef2f2;text-align:center;">
+                    <div style="font-size:11px;color:#991b1b;text-transform:uppercase;">Expenses</div>
+                    <div style="font-size:16px;font-weight:700;color:#991b1b;">' . htmlspecialchars($cur) . ' ' . number_format($summary['expense'], 2) . '</div>
+                </td>
+                <td style="padding:10px;background:#f5f7f6;border-radius:0 8px 8px 0;text-align:center;">
+                    <div style="font-size:11px;color:#667085;text-transform:uppercase;">Net</div>
+                    <div style="font-size:16px;font-weight:700;color:' . $netColor . ';">' . htmlspecialchars($cur) . ' ' . number_format($net, 2) . '</div>
+                </td>
+            </tr>
+        </table>
+        <div style="font-size:13px;font-weight:700;color:#333;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.03em;">Top expense categories</div>
+        <table style="width:100%;border-collapse:collapse;">' . $catRows . '</table>
+        <p style="color:#888;font-size:12px;margin-top:18px;">You\'re receiving this because ' . ($isDaily ? 'daily' : 'weekly') . ' reports are turned on in your Hisaab settings. You can turn them off anytime under Settings → Notifications.</p>
+    ';
+
+    return send_admin_notice_email(
+        $toEmail, $toName, $subject, '#16a34a', $heading, $body,
+        "Your $kind Hisaab report: Income " . $cur . ' ' . number_format($summary['income'], 2) .
+        ", Expenses " . $cur . ' ' . number_format($summary['expense'], 2) .
+        ", Net " . $cur . ' ' . number_format($net, 2) . '.'
+    );
+}

@@ -18,6 +18,10 @@ CREATE TABLE IF NOT EXISTS users (
     banned_at TIMESTAMP NULL,
     warning_count INT NOT NULL DEFAULT 0,
     currency VARCHAR(10) DEFAULT 'Rs',
+    notify_daily TINYINT(1) NOT NULL DEFAULT 0,
+    notify_weekly TINYINT(1) NOT NULL DEFAULT 0,
+    last_daily_report_at DATETIME NULL,
+    last_weekly_report_at DATETIME NULL,
     avatar_color VARCHAR(10) DEFAULT '#16A34A',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
