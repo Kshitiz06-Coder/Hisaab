@@ -48,16 +48,26 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // --- Settings tabs ---
+  function activateTab(targetId) {
+    var tabLink = document.querySelector('[data-tab-target="' + targetId + '"]');
+    var panel = document.getElementById(targetId);
+    if (!tabLink || !panel) return;
+    document.querySelectorAll('.settings-tabs a').forEach(function (t) { t.classList.remove('active'); });
+    document.querySelectorAll('.settings-panel').forEach(function (p) { p.classList.remove('active'); });
+    tabLink.classList.add('active');
+    panel.classList.add('active');
+  }
   document.querySelectorAll('[data-tab-target]').forEach(function (tab) {
     tab.addEventListener('click', function (e) {
       e.preventDefault();
-      var targetId = tab.getAttribute('data-tab-target');
-      document.querySelectorAll('.settings-tabs a').forEach(function (t) { t.classList.remove('active'); });
-      document.querySelectorAll('.settings-panel').forEach(function (p) { p.classList.remove('active'); });
-      tab.classList.add('active');
-      document.getElementById(targetId).classList.add('active');
+      activateTab(tab.getAttribute('data-tab-target'));
     });
   });
+  // Open the right tab if we were redirected back with a #tab-id hash
+  // (e.g. after saving something inside a specific Settings tab).
+  if (window.location.hash) {
+    activateTab(window.location.hash.substring(1));
+  }
 
   // --- Auto-hide flash alerts ---
   document.querySelectorAll('.alert[data-autohide]').forEach(function (alertEl) {
