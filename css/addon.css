@@ -225,3 +225,133 @@
   background: var(--ink-100);
   color: var(--ink-700);
 }
+
+/* ============================================
+   ONBOARDING — first-login category picker
+   ============================================ */
+.onboard-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: var(--bg);
+}
+.onboard-card {
+  width: 100%;
+  max-width: 720px;
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--ink-100);
+  box-shadow: var(--shadow-lg);
+  padding: 36px 40px 28px;
+}
+.onboard-head { text-align: center; margin-bottom: 26px; }
+.onboard-head .brand-mark { display: inline-flex; width: 44px; height: 44px; margin-bottom: 10px; }
+.onboard-head .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+.onboard-head h2 { font-size: 22px; margin-bottom: 8px; }
+.onboard-head p { color: var(--ink-500); font-size: 14px; max-width: 480px; margin: 0 auto; line-height: 1.55; }
+
+.onboard-section { margin-bottom: 26px; padding-bottom: 22px; border-bottom: 1px solid var(--ink-100); }
+.onboard-section:last-of-type { border-bottom: none; }
+.onboard-section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.onboard-section-head h3 { font-size: 15.5px; }
+
+.cat-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+}
+.cat-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border: 1.5px solid var(--ink-100);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.cat-picker-item:has(input:checked) {
+  border-color: var(--green-600);
+  background: var(--green-50);
+  color: var(--green-700);
+}
+.cat-picker-item input { accent-color: var(--green-600); width: 15px; height: 15px; flex-shrink: 0; }
+
+.cat-custom-row { margin-top: 16px; }
+.cat-custom-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.cat-custom-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 8px 7px 14px;
+  background: var(--green-50); color: var(--green-700);
+  border-radius: 999px; font-size: 13px; font-weight: 600;
+}
+.cat-custom-chip button {
+  background: none; border: none; color: var(--green-700); opacity: .65;
+  font-size: 11px; cursor: pointer; padding: 4px; line-height: 1;
+}
+.cat-custom-chip button:hover { opacity: 1; }
+.cat-custom-add { display: flex; gap: 8px; }
+.cat-custom-input {
+  flex: 1; padding: 10px 14px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--ink-300); font-size: 13.5px;
+}
+
+.onboard-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 6px; }
+
+@media (max-width: 560px) {
+  .onboard-card { padding: 28px 20px 22px; }
+  .onboard-foot { flex-direction: column-reverse; align-items: stretch; }
+  .onboard-foot .btn { width: 100%; }
+}
+
+/* ============================================
+   SETTINGS — categories tab
+   ============================================ */
+.cat-manage-group { margin-bottom: 24px; }
+.cat-manage-group:last-child { margin-bottom: 0; }
+.cat-manage-group h4 { font-size: 14px; margin-bottom: 12px; color: var(--ink-700); }
+.cat-manage-list { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 12px; }
+.cat-manage-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 12px; border-radius: 999px; font-size: 13px; font-weight: 500;
+  border: 1.5px solid var(--ink-100); cursor: pointer; user-select: none;
+}
+.cat-manage-chip input { accent-color: var(--green-600); }
+.cat-manage-chip:has(input:checked) { border-color: var(--green-600); background: var(--green-50); color: var(--green-700); }
+.cat-manage-custom { display: flex; flex-wrap: wrap; gap: 9px; }
+.cat-manage-custom .cat-manage-chip { background: var(--ink-100); border-color: transparent; cursor: default; }
+.cat-manage-custom .cat-manage-chip button {
+  background: none; border: none; color: var(--red-600); font-size: 11px; cursor: pointer; padding: 2px;
+}
+.field-inline-add { display: flex; gap: 8px; margin-top: 4px; }
+.field-inline-add input { flex: 1; padding: 10px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--ink-300); font-size: 13.5px; }
+
+.threshold-row { display: flex; align-items: center; gap: 14px; padding: 16px 0; border-top: 1px solid var(--ink-100); }
+.threshold-row .field { margin: 0; max-width: 180px; }
+
+/* ============================================
+   DASHBOARD — savings overview card
+   ============================================ */
+.savings-overview { grid-column: 1 / -1; }
+.savings-overview .card-body { display: grid; grid-template-columns: repeat(3, 1fr) 1.3fr; gap: 22px; align-items: center; }
+.sv-figure { text-align: left; }
+.sv-figure .sv-label { font-size: 12px; color: var(--ink-500); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 5px; }
+.sv-figure .sv-value { font-size: 21px; font-weight: 700; font-family: var(--font-display); }
+.sv-analysis { padding-left: 22px; border-left: 1px solid var(--ink-100); }
+.sv-rate-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.sv-rate-row .sv-rate-num { font-size: 26px; font-weight: 700; font-family: var(--font-display); }
+.sv-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+.sv-badge.great, .sv-badge.good { background: var(--green-100); color: var(--green-700); }
+.sv-badge.warn { background: var(--amber-50); color: var(--amber-600); }
+.sv-badge.bad { background: var(--red-50); color: var(--red-600); }
+.sv-badge.neutral { background: var(--ink-100); color: var(--ink-700); }
+.sv-message { font-size: 13px; color: var(--ink-500); line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .savings-overview .card-body { grid-template-columns: repeat(2, 1fr); }
+  .sv-analysis { grid-column: 1 / -1; border-left: none; border-top: 1px solid var(--ink-100); padding-left: 0; padding-top: 16px; }
+}
