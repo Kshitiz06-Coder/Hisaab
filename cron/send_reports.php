@@ -26,5 +26,6 @@ require_once __DIR__ . '/../config/report_dispatch.php';
 
 $dailySent = dispatch_daily_reports($conn);
 $weeklySent = dispatch_weekly_reports($conn);
+$lowBalanceSent = dispatch_low_balance_alerts($conn);
 
-echo "[" . date('Y-m-d H:i:s') . "] Daily reports sent: $dailySent, Weekly reports sent: $weeklySent" . PHP_EOL;
+echo "[" . date('Y-m-d H:i:s') . "] Daily reports sent: $dailySent, Weekly reports sent: $weeklySent, Low-balance alerts sent: $lowBalanceSent" . PHP_EOL;

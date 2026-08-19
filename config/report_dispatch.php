@@ -93,3 +93,23 @@ function dispatch_weekly_reports($conn) {
     }
     return $sent;
 }
+
+/**
+ * Sweep every opted-in, verified user and send a low-balance alert to
+ * anyone whose current-month balance is under their threshold and who
+ * hasn't been alerted in the last 24 hours. Safe to run alongside the
+ * report cron (e.g. hourly) — maybe_send_low_balance_alert() throttles
+ * per-user, so this is just a safety net for users who don't visit the
+ * dashboard or add an expense that would otherwise trigger the check.
+ */
+function dispatch_low_balance_alerts($conn) {
+    $sql = "SELECT * FROM users
+            WHERE notify_low_balance = 1 AND is_banned = 0 AND is_verified = 1
+              AND (last_low_balance_alert_at IS NULL OR last_low_balance_alert_at <= DATE_SUB(NOW(), INTERVAL 24 HOUR))";
+    $res = mysqli_query($conn, $sql);
+    $sent = 0;
+    while ($user = mysqli_fetch_assoc($res)) {
+        if (maybe_send_low_balance_alert($conn, $user)) $sent++;
+    }
+    return $sent;
+}

@@ -170,6 +170,34 @@ function send_unban_email($toEmail, $toName) {
     );
 }
 
+/** Sent automatically when a user's monthly balance drops below their alert threshold. */
+function send_low_balance_email($toEmail, $toName, $balance, $threshold, $currency) {
+    $body = '<p style="color:#333;">Just a heads up — your balance for this month has dropped below the alert level you set.</p>
+        <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+            <tr>
+                <td style="padding:10px;background:#fef2f2;border-radius:8px 0 0 8px;text-align:center;">
+                    <div style="font-size:11px;color:#991b1b;text-transform:uppercase;">Current balance</div>
+                    <div style="font-size:18px;font-weight:700;color:#991b1b;">' . htmlspecialchars($currency) . ' ' . number_format($balance, 2) . '</div>
+                </td>
+                <td style="padding:10px;background:#f5f7f6;border-radius:0 8px 8px 0;text-align:center;">
+                    <div style="font-size:11px;color:#667085;text-transform:uppercase;">Your alert threshold</div>
+                    <div style="font-size:18px;font-weight:700;color:#333;">' . htmlspecialchars($currency) . ' ' . number_format($threshold, 2) . '</div>
+                </td>
+            </tr>
+        </table>
+        <p style="color:#333;">It might be a good time to review your expenses or hold off on non-essential spending.</p>
+        <p style="color:#888;font-size:12px;margin-top:18px;">You\'re receiving this because low-balance alerts are turned on in your Hisaab settings. You can adjust the threshold or turn this off anytime under Settings → Notifications.</p>';
+
+    return send_admin_notice_email(
+        $toEmail, $toName,
+        'Hisaab — your balance is running low',
+        '#dc2626',
+        '⚠ Low balance alert',
+        $body,
+        "Your Hisaab balance this month is $currency " . number_format($balance, 2) . ", below your alert threshold of $currency " . number_format($threshold, 2) . '.'
+    );
+}
+
 /**
  * Renders and sends a daily or weekly income/expense summary email.
  * $summary = ['income' => float, 'expense' => float, 'currency' => string,
