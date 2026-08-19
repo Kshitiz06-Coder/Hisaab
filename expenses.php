@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = mysqli_prepare($conn, "INSERT INTO expenses (user_id, category_id, title, amount, entry_date, note) VALUES (?,?,?,?,?,?)");
             mysqli_stmt_bind_param($stmt, 'iisdss', $user['id'], $category_id, $title, $amount, $entry_date, $note);
             mysqli_stmt_execute($stmt);
+            maybe_send_low_balance_alert($conn, $user);
             flash('success', 'Expense added.');
         } else {
             $id = (int)$_POST['id'];

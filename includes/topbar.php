@@ -22,6 +22,15 @@
             </div>
             <a href="profile.php">👤 View Profile</a>
             <a href="settings.php">⚙️ Settings</a>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-theme-row">
+              <span>🌙 Dark mode</span>
+              <label class="theme-switch">
+                <input type="checkbox" id="themeSwitchTopbar" class="theme-switch-input">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="dropdown-divider"></div>
             <a href="logout.php" class="pd-logout">↪ Log out</a>
           </div>
         </div>

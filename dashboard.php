@@ -11,6 +11,9 @@ $balance = $total_income - $total_expense;
 $all_income_ever = get_total($conn, 'income', $user['id']);
 $all_expense_ever = get_total($conn, 'expenses', $user['id']);
 
+$savings = get_savings_overview($conn, $user['id']);
+maybe_send_low_balance_alert($conn, $user);
+
 // Last 6 months cash flow for chart
 $months = [];
 $income_series = [];
@@ -101,6 +104,35 @@ require __DIR__ . '/includes/topbar.php';
         <?php endwhile; ?>
         </div>
       <?php endif; ?>
+    </div>
+  </div>
+
+  <div class="card savings-overview">
+    <div class="card-head">
+      <h3>💰 Savings overview</h3>
+      <a href="savings.php" class="btn-sm btn btn-ghost">Savings goals</a>
+    </div>
+    <div class="card-body">
+      <div class="sv-figure">
+        <div class="sv-label">Income this month</div>
+        <div class="sv-value" style="color:var(--green-700);"><?= money($savings['month_income'], $currency) ?></div>
+      </div>
+      <div class="sv-figure">
+        <div class="sv-label">Expenses this month</div>
+        <div class="sv-value" style="color:var(--red-600);"><?= money($savings['month_expense'], $currency) ?></div>
+      </div>
+      <div class="sv-figure">
+        <div class="sv-label">Total savings (all-time)</div>
+        <div class="sv-value" style="color:<?= $savings['total_savings'] >= 0 ? 'var(--green-700)' : 'var(--red-600)' ?>;"><?= money($savings['total_savings'], $currency) ?></div>
+      </div>
+      <div class="sv-analysis">
+        <div class="sv-rate-row">
+          <span class="sv-rate-num"><?= number_format($savings['savings_rate'], 1) ?>%</span>
+          <span class="sv-badge <?= $savings['status'] ?>"><?= ucfirst($savings['status'] === 'great' ? 'excellent' : $savings['status']) ?></span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:<?= max(0, min(100, $savings['savings_rate'])) ?>%;"></div></div>
+        <div class="sv-message" style="margin-top:8px;"><?= e($savings['message']) ?></div>
+      </div>
     </div>
   </div>
 </div>
