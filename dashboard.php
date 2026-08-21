@@ -19,7 +19,7 @@ $months = [];
 $income_series = [];
 $expense_series = [];
 for ($i = 5; $i >= 0; $i--) {
-    $m = date('Y-m', strtotime("-$i x"));
+    $m = date('Y-m', strtotime("-$i months"));
     $months[] = date('M', strtotime($m . '-01'));
     $income_series[] = get_total($conn, 'income', $user['id'], $m);
     $expense_series[] = get_total($conn, 'expenses', $user['id'], $m);
