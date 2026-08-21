@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="containers">
   <nav class="landing-nav">
     <a href="index.php" class="brand"><span class="brand-mark"><img src="img/Logo.png" alt="Hisaab Logo"></span> Hisaab</a>
     <div class="nav-actions">
