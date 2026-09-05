@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Log In · Hisaab</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/addon.css">
+<link rel="stylesheet" href="css/addon.css?v=2">
 </head>
 <body>
 <div class="auth-wrap">
@@ -84,14 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <form method="POST" novalidate>
         <div class="field">
           <label for="email">Email address</label>
-          <input type="email" id="email" name="email" placeholder="you@example.com" value="<?= e($email) ?>" required>
+          <input type="email" id="email" name="email" placeholder="you@example.com" value="<?= e($email) ?>" required autocomplete="email">
+          <small class="field-error" id="email_error"></small>
         </div>
         <div class="field">
           <label for="password">Password</label>
           <div class="password-wrap">
-            <input type="password" id="password" name="password" placeholder="Your password" required>
+            <input type="password" id="password" name="password" placeholder="Your password" required autocomplete="current-password">
             <button type="button" class="toggle-password" data-target="password" aria-label="Show password"><img src="img/show.png" alt="show" width="25" height="25"></button>
           </div>
+          <small class="field-error" id="password_error"></small>
           <div style="text-align:right;margin-top:6px;"><a href="forgot-password.php" style="font-size:12.5px;color:var(--green-700);font-weight:600;">Forgot password?</a></div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Log in</button>
@@ -101,5 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 <script src="js/password-toggle.js?v=2"></script>
+<script src="js/form-validate.js"></script>
 </body>
 </html>

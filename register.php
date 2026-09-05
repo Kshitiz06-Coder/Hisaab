@@ -15,7 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm = $_POST['confirm_password'] ?? '';
 
-    if ($full_name === '') $errors[] = 'Full name is required.';
+    if ($full_name === '') {
+        $errors[] = 'Full name is required.';
+    } elseif (!preg_match("/^[A-Za-z\s'.-]+$/", $full_name)) {
+        $errors[] = 'Full name can only contain letters, spaces, and \' . -  (no numbers or symbols).';
+    }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Enter a valid email address.';
     if (strlen($password) < 6) $errors[] = 'Password must be at least 6 characters.';
     if ($password !== $confirm) $errors[] = 'Passwords do not match.';
@@ -84,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Create Account · Hisaab</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/addon.css">
+<link rel="stylesheet" href="css/addon.css?v=2">
 </head>
 <body>
 <div class="auth-wrap">
@@ -110,25 +114,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <form method="POST" novalidate>
         <div class="field">
           <label for="full_name">Full name</label>
-          <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" value="<?= e($full_name) ?>" required>
+          <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" value="<?= e($full_name) ?>" required autocomplete="name">
+          <small class="field-error" id="full_name_error"></small>
         </div>
         <div class="field">
           <label for="email">Email address</label>
-          <input type="email" id="email" name="email" placeholder="you@example.com" value="<?= e($email) ?>" required>
+          <input type="email" id="email" name="email" placeholder="you@example.com" value="<?= e($email) ?>" required autocomplete="email">
+          <small class="field-error" id="email_error"></small>
         </div>
         <div class="field">
           <label for="password">Password</label>
           <div class="password-wrap">
-            <input type="password" id="password" name="password" placeholder="At least 6 characters" required minlength="6">
+            <input type="password" id="password" name="password" placeholder="At least 6 characters" required minlength="6" autocomplete="new-password">
             <button type="button" class="toggle-password" data-target="password" aria-label="Show password"><img src="img/show.png" alt="show" width="25" height="25"></button>
           </div>
+          <small class="field-error" id="password_error"></small>
         </div>
         <div class="field">
           <label for="confirm_password">Confirm password</label>
           <div class="password-wrap">
-            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required minlength="6">
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password" required minlength="6" autocomplete="new-password">
             <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Show password"><img src="img/show.png" alt="show" width="25" height="25"></button>
           </div>
+          <small class="field-error" id="confirm_password_error"></small>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Create account</button>
       </form>
@@ -137,5 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </div>
 <script src="js/password-toggle.js?v=2"></script>
+<script src="js/form-validate.js"></script>
 </body>
 </html>

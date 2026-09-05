@@ -46,14 +46,14 @@ require __DIR__ . '/includes/topbar.php';
 <div class="stat-grid">
   <div class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Income this month</div><div class="stat-value"><?= money($total_income, $currency) ?></div></div>
+      <div><div class="stat-label">Income this Week</div><div class="stat-value"><?= money($total_income, $currency) ?></div></div>
       <div class="stat-icon income"><img src="img/Savings.png" alt="Income"></div>
     </div>
     <span class="stat-trend up">↑ All-time: <?= money($all_income_ever, $currency) ?></span>
   </div>
   <div class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Expenses this month</div><div class="stat-value"><?= money($total_expense, $currency) ?></div></div>
+      <div><div class="stat-label">Expenses this Week</div><div class="stat-value"><?= money($total_expense, $currency) ?></div></div>
       <div class="stat-icon expense"><img src="img/Expense.png" alt="Expense"></div>
     </div>
     <span class="stat-trend down">↓ All-time: <?= money($all_expense_ever, $currency) ?></span>
