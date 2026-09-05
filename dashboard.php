@@ -19,10 +19,10 @@ $months = [];
 $income_series = [];
 $expense_series = [];
 for ($i = 5; $i >= 0; $i--) {
-    $m = date('Y-m', strtotime("-$i months"));
-    $months[] = date('M', strtotime($m . '-01'));
-    $income_series[] = get_total($conn, 'income', $user['id'], $m);
-    $expense_series[] = get_total($conn, 'expenses', $user['id'], $m);
+  $m = date('Y-m', strtotime("-$i months"));
+  $months[] = date('M', strtotime($m . '-01'));
+  $income_series[] = get_total($conn, 'income', $user['id'], $m);
+  $expense_series[] = get_total($conn, 'expenses', $user['id'], $m);
 }
 
 // Recent transactions (union of income + expenses)
@@ -46,21 +46,30 @@ require __DIR__ . '/includes/topbar.php';
 <div class="stat-grid">
   <div class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Income this Week</div><div class="stat-value"><?= money($total_income, $currency) ?></div></div>
+      <div>
+        <div class="stat-label">Income this Week</div>
+        <div class="stat-value"><?= money($total_income, $currency) ?></div>
+      </div>
       <div class="stat-icon income"><img src="img/Savings.png" alt="Income"></div>
     </div>
     <span class="stat-trend up">↑ All-time: <?= money($all_income_ever, $currency) ?></span>
   </div>
   <div class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Expenses this Week</div><div class="stat-value"><?= money($total_expense, $currency) ?></div></div>
+      <div>
+        <div class="stat-label">Expenses this Week</div>
+        <div class="stat-value"><?= money($total_expense, $currency) ?></div>
+      </div>
       <div class="stat-icon expense"><img src="img/Expense.png" alt="Expense"></div>
     </div>
     <span class="stat-trend down">↓ All-time: <?= money($all_expense_ever, $currency) ?></span>
   </div>
   <div class="stat-card">
     <div class="stat-top">
-      <div><div class="stat-label">Net balance</div><div class="stat-value" style="color:<?= $balance >= 0 ? 'var(--green-700)' : 'var(--red-600)' ?>;"><?= money($balance, $currency) ?></div></div>
+      <div>
+        <div class="stat-label">Net balance</div>
+        <div class="stat-value" style="color:<?= $balance >= 0 ? 'var(--green-700)' : 'var(--red-600)' ?>;"><?= money($balance, $currency) ?></div>
+      </div>
       <div class="stat-icon balance"><img src="img/Income.png" alt="Savings"></div>
     </div>
     <span class="stat-trend <?= $balance >= 0 ? 'up' : 'down' ?>"><?= $balance >= 0 ? '✓ Healthy' : '⚠ Overspending' ?></span>
@@ -92,16 +101,16 @@ require __DIR__ . '/includes/topbar.php';
         </div>
       <?php else: ?>
         <div class="tx-list">
-        <?php while ($tx = mysqli_fetch_assoc($recent)): ?>
-          <div class="tx-row">
-            <div class="tx-ic <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '<img src="img/Savings.png" alt="Income">' : '<img src="img/Expense.png" alt="Expense">' ?></div>
-            <div class="tx-info">
-              <div class="tx-title"><?= e($tx['title']) ?></div>
-              <div class="tx-meta"><?= date('M j, Y', strtotime($tx['entry_date'])) ?></div>
+          <?php while ($tx = mysqli_fetch_assoc($recent)): ?>
+            <div class="tx-row">
+              <div class="tx-ic <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '<img src="img/Savings.png" alt="Income">' : '<img src="img/Expense.png" alt="Expense">' ?></div>
+              <div class="tx-info">
+                <div class="tx-title"><?= e($tx['title']) ?></div>
+                <div class="tx-meta"><?= date('M j, Y', strtotime($tx['entry_date'])) ?></div>
+              </div>
+              <div class="tx-amount <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '+' : '-' ?><?= money($tx['amount'], $currency) ?></div>
             </div>
-            <div class="tx-amount <?= $tx['kind'] ?>"><?= $tx['kind'] === 'income' ? '+' : '-' ?><?= money($tx['amount'], $currency) ?></div>
-          </div>
-        <?php endwhile; ?>
+          <?php endwhile; ?>
         </div>
       <?php endif; ?>
     </div>
@@ -130,7 +139,9 @@ require __DIR__ . '/includes/topbar.php';
           <span class="sv-rate-num"><?= number_format($savings['savings_rate'], 1) ?>%</span>
           <span class="sv-badge <?= $savings['status'] ?>"><?= ucfirst($savings['status'] === 'great' ? 'excellent' : $savings['status']) ?></span>
         </div>
-        <div class="progress-track"><div class="progress-fill" style="width:<?= max(0, min(100, $savings['savings_rate'])) ?>%;"></div></div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:<?= max(0, min(100, $savings['savings_rate'])) ?>%;"></div>
+        </div>
         <div class="sv-message" style="margin-top:8px;"><?= e($savings['message']) ?></div>
       </div>
     </div>
@@ -139,34 +150,60 @@ require __DIR__ . '/includes/topbar.php';
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 <script>
-const ctx = document.getElementById('cashFlowChart');
-new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: <?= json_encode($months) ?>,
-    datasets: [
-      {
-        label: 'Income',
-        data: <?= json_encode($income_series) ?>,
-        borderColor: '#16a34a',
-        backgroundColor: 'rgba(22,163,74,0.10)',
-        tension: 0.35, fill: true, pointRadius: 3
+  const ctx = document.getElementById('cashFlowChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: <?= json_encode($months) ?>,
+      datasets: [{
+          label: 'Income',
+          data: <?= json_encode($income_series) ?>,
+          borderColor: '#16a34a',
+          backgroundColor: 'rgba(22,163,74,0.10)',
+          tension: 0.35,
+          fill: true,
+          pointRadius: 3
+        },
+        {
+          label: 'Expenses',
+          data: <?= json_encode($expense_series) ?>,
+          borderColor: '#dc2626',
+          backgroundColor: 'rgba(220,38,38,0.06)',
+          tension: 0.35,
+          fill: true,
+          pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            boxWidth: 10,
+            font: {
+              size: 12
+            }
+          }
+        }
       },
-      {
-        label: 'Expenses',
-        data: <?= json_encode($expense_series) ?>,
-        borderColor: '#dc2626',
-        backgroundColor: 'rgba(220,38,38,0.06)',
-        tension: 0.35, fill: true, pointRadius: 3
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: '#eef1f4'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
       }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 12 } } } },
-    scales: { y: { beginAtZero: true, grid: { color: '#eef1f4' } }, x: { grid: { display: false } } }
-  }
-});
+    }
+  });
 </script>
 
 <?php require __DIR__ . '/includes/footer_app.php'; ?>
