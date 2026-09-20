@@ -40,8 +40,3 @@ hisaab/
 - Settings: edit profile, change password, set currency symbol
 - Fully responsive: collapsible sidebar / hamburger menu below 768px, stacking grids, scrollable tables on small screens
 
-## 4. Notes for your report / demo
-- Passwords are hashed with PHP's built-in bcrypt (`PASSWORD_DEFAULT`) — never stored in plain text.
-- All database queries use **prepared statements** (`mysqli_prepare` + `bind_param`) to prevent SQL injection.
-- Each protected page starts a session and checks `$_SESSION['user_id']`; users can only see/edit their own rows (every query is scoped by `user_id`).
-- The currency symbol (`Rs` by default) is configurable per-user in Settings → Preferences.
