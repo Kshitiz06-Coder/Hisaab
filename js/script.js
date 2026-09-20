@@ -37,15 +37,51 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // --- Delete confirmation ---
+  // --- Delete confirmation (custom popup instead of browser confirm()) ---
+  var confirmDeleteModal = document.getElementById('confirmDeleteModal');
+  var confirmDeleteText = document.getElementById('confirmDeleteText');
+  var confirmDeleteYes = document.getElementById('confirmDeleteYes');
+  var pendingDeleteForm = null;
+
   document.querySelectorAll('.confirm-delete').forEach(function (form) {
     form.addEventListener('submit', function (e) {
-      var label = form.getAttribute('data-label') || 'this entry';
-      if (!confirm('Delete ' + label + '? This cannot be undone.')) {
-        e.preventDefault();
+      // Fallback to native confirm if the shared popup isn't on this page for some reason
+      if (!confirmDeleteModal || !confirmDeleteYes) {
+        var label = form.getAttribute('data-label') || 'this entry';
+        if (!confirm('Do you really want to delete ' + label + '? This cannot be undone.')) {
+          e.preventDefault();
+        }
+        return;
       }
+      e.preventDefault();
+      pendingDeleteForm = form;
+      var label = form.getAttribute('data-label') || 'this transaction';
+      if (confirmDeleteText) {
+        confirmDeleteText.textContent = 'Do you really want to delete ' + label + '? This cannot be undone.';
+      }
+      confirmDeleteModal.classList.add('open');
     });
   });
+
+  if (confirmDeleteYes) {
+    confirmDeleteYes.addEventListener('click', function () {
+      confirmDeleteModal.classList.remove('open');
+      if (pendingDeleteForm) {
+        var formToSubmit = pendingDeleteForm;
+        pendingDeleteForm = null;
+        formToSubmit.submit(); // .submit() bypasses the 'submit' listener above, so no loop
+      }
+    });
+  }
+
+  // Clear the pending form if the popup is dismissed without confirming
+  if (confirmDeleteModal) {
+    confirmDeleteModal.addEventListener('click', function (e) {
+      if (e.target === confirmDeleteModal || e.target.closest('[data-modal-close]')) {
+        pendingDeleteForm = null;
+      }
+    });
+  }
 
   // --- Settings tabs ---
   function activateTab(targetId) {
@@ -69,12 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
     activateTab(window.location.hash.substring(1));
   }
 
-  // --- Auto-hide flash alerts ---
-  document.querySelectorAll('.alert[data-autohide]').forEach(function (alertEl) {
+  // --- Auto-hide flash alerts (shown as floating popups, see .alert[data-autohide] CSS) ---
+  document.querySelectorAll('.alert[data-autohide]').forEach(function (alertEl, i) {
+    alertEl.style.top = (22 + i * 64) + 'px'; // stack if more than one is ever shown at once
     setTimeout(function () {
-      alertEl.style.transition = 'opacity .4s ease';
-      alertEl.style.opacity = '0';
-      setTimeout(function () { alertEl.remove(); }, 400);
+      alertEl.classList.add('toast-hide');
+      setTimeout(function () { alertEl.remove(); }, 350);
     }, 3500);
   });
 

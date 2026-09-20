@@ -4,8 +4,36 @@ require_once __DIR__ . '/includes/auth_check.php';
 $currency = $user['currency'] ?: 'Rs';
 $this_month = date('Y-m');
 
-$total_income = get_total($conn, 'income', $user['id'], $this_month);
-$total_expense = get_total($conn, 'expenses', $user['id'], $this_month);
+function get_total_range($conn, $table, $user_id, $start_date, $end_date) {
+  $sql = "SELECT COALESCE(SUM(amount),0) AS total FROM $table WHERE user_id = ? AND entry_date BETWEEN ? AND ?";
+  $stmt = mysqli_prepare($conn, $sql);
+  mysqli_stmt_bind_param($stmt, 'iss', $user_id, $start_date, $end_date);
+  mysqli_stmt_execute($stmt);
+  $res = mysqli_stmt_get_result($stmt);
+  $row = mysqli_fetch_assoc($res);
+  return (float)$row['total'];
+}
+
+// Last 6 weeks cash flow, Mon–Sun weeks, oldest to newest, current week last
+$weeks = [];
+$income_series = [];
+$expense_series = [];
+$savings_series = [];
+$this_monday = date('Y-m-d', strtotime('monday this week'));
+for ($i = 5; $i >= 0; $i--) {
+  $week_start = date('Y-m-d', strtotime("$this_monday -$i weeks"));
+  $week_end = date('Y-m-d', strtotime("$week_start +6 days"));
+  $weeks[] = date('M j', strtotime($week_start)) . '–' . date('j', strtotime($week_end));
+  $week_income = get_total_range($conn, 'income', $user['id'], $week_start, $week_end);
+  $week_expense = get_total_range($conn, 'expenses', $user['id'], $week_start, $week_end);
+  $income_series[] = $week_income;
+  $expense_series[] = $week_expense;
+  $savings_series[] = $week_income - $week_expense;
+}
+
+// Stat cards now mirror the same 6-week window as the chart
+$total_income = array_sum($income_series);
+$total_expense = array_sum($expense_series);
 $balance = $total_income - $total_expense;
 
 $all_income_ever = get_total($conn, 'income', $user['id']);
@@ -14,16 +42,6 @@ $all_expense_ever = get_total($conn, 'expenses', $user['id']);
 $savings = get_savings_overview($conn, $user['id']);
 maybe_send_low_balance_alert($conn, $user);
 
-// Last 6 months cash flow for chart
-$months = [];
-$income_series = [];
-$expense_series = [];
-for ($i = 5; $i >= 0; $i--) {
-  $m = date('Y-m', strtotime("-$i months"));
-  $months[] = date('M', strtotime($m . '-01'));
-  $income_series[] = get_total($conn, 'income', $user['id'], $m);
-  $expense_series[] = get_total($conn, 'expenses', $user['id'], $m);
-}
 
 // Recent transactions (union of income + expenses)
 $stmt = mysqli_prepare($conn, "
@@ -47,7 +65,7 @@ require __DIR__ . '/includes/topbar.php';
   <div class="stat-card">
     <div class="stat-top">
       <div>
-        <div class="stat-label">Income this Week</div>
+        <div class="stat-label">Income — last 6 weeks</div>
         <div class="stat-value"><?= money($total_income, $currency) ?></div>
       </div>
       <div class="stat-icon income"><img src="img/Income.png" alt="Income"></div>
@@ -57,7 +75,7 @@ require __DIR__ . '/includes/topbar.php';
   <div class="stat-card">
     <div class="stat-top">
       <div>
-        <div class="stat-label">Expenses this Week</div>
+        <div class="stat-label">Expenses — last 6 weeks</div>
         <div class="stat-value"><?= money($total_expense, $currency) ?></div>
       </div>
       <div class="stat-icon expense"><img src="img/Expense.png" alt="Expense"></div>
@@ -79,10 +97,19 @@ require __DIR__ . '/includes/topbar.php';
 <div class="dash-grid">
   <div class="card">
     <div class="card-head">
-      <h3>Cash flow — last 6 months</h3>
+      <h3>Cash flow — last 6 weeks</h3>
     </div>
     <div class="card-body">
-      <div class="chart-wrap"><canvas id="cashFlowChart"></canvas></div>
+      <?php if (array_sum($income_series) == 0 && array_sum($expense_series) == 0): ?>
+        <div class="empty-state">
+          <div class="emoji">📊</div>
+          <h4>No activity in the last 6 weeks</h4>
+          <p>Log some income or expenses and this chart will fill in.</p>
+          <a href="income.php" class="btn btn-primary btn-sm">Add income</a>
+        </div>
+      <?php else: ?>
+        <div class="chart-wrap"><canvas id="cashFlowChart"></canvas></div>
+      <?php endif; ?>
     </div>
   </div>
 
@@ -148,30 +175,36 @@ require __DIR__ . '/includes/topbar.php';
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="js/chart.umd.min.js"></script>
 <script>
   const ctx = document.getElementById('cashFlowChart');
+  if (typeof Chart === 'undefined') {
+    console.error('Chart.js failed to load — check that js/chart.umd.min.js exists and the path is correct.');
+  } else if (ctx) {
   new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
-      labels: <?= json_encode($months) ?>,
+      labels: <?= json_encode($weeks) ?>,
       datasets: [{
           label: 'Income',
           data: <?= json_encode($income_series) ?>,
-          borderColor: '#16a34a',
-          backgroundColor: 'rgba(22,163,74,0.10)',
-          tension: 0.35,
-          fill: true,
-          pointRadius: 3
+          backgroundColor: '#16a34a',
+          borderRadius: 4,
+          maxBarThickness: 28
         },
         {
           label: 'Expenses',
           data: <?= json_encode($expense_series) ?>,
-          borderColor: '#dc2626',
-          backgroundColor: 'rgba(220,38,38,0.06)',
-          tension: 0.35,
-          fill: true,
-          pointRadius: 3
+          backgroundColor: '#dc2626',
+          borderRadius: 4,
+          maxBarThickness: 28
+        },
+        {
+          label: 'Total Savings',
+          data: <?= json_encode($savings_series) ?>,
+          backgroundColor: '#2563eb',
+          borderRadius: 4,
+          maxBarThickness: 28
         }
       ]
     },
@@ -185,6 +218,13 @@ require __DIR__ . '/includes/topbar.php';
             boxWidth: 10,
             font: {
               size: 12
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(item) {
+              return item.dataset.label + ': <?= $currency ?> ' + item.formattedValue;
             }
           }
         }
@@ -204,6 +244,7 @@ require __DIR__ . '/includes/topbar.php';
       }
     }
   });
+  }
 </script>
 
 <?php require __DIR__ . '/includes/footer_app.php'; ?>

@@ -18,3 +18,11 @@ if (!$user) {
     session_destroy();
     redirect('login.php');
 }
+
+// Send first-time users to the "choose your categories" onboarding card
+// before they can reach any other page.
+$current_page = basename($_SERVER['PHP_SELF']);
+$onboarding_exempt = ['onboarding.php', 'logout.php'];
+if (empty($user['onboarded']) && !in_array($current_page, $onboarding_exempt, true)) {
+    redirect('onboarding.php');
+}

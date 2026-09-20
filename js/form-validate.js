@@ -68,15 +68,48 @@
   // ---------- Email ----------
   const emailInput = document.getElementById('email');
   const emailError = document.getElementById('email_error');
+  const isRegisterPage = !!document.getElementById('confirm_password');
+  let emailTaken = false; // set true only by the async "already registered" check below (register page only)
+
   const validateEmail = bind(emailInput, emailError, function (value) {
+    if (/^[0-9]/.test(value)) return 'Email must start with a letter, not a number.';
     if (!EMAIL_PATTERN.test(value)) return 'Enter a valid email address (e.g. you@example.com).';
     return true;
   });
 
+  // ---------- Email-exists check (register page only, debounced) ----------
+  if (isRegisterPage && emailInput) {
+    let emailCheckTimer = null;
+    emailInput.addEventListener('input', function () {
+      emailTaken = false;
+      clearTimeout(emailCheckTimer);
+
+      const value = emailInput.value.trim();
+      // Only bother checking once it's a well-formed, letter-starting email —
+      // no point hitting the server over an obviously incomplete address.
+      if (/^[0-9]/.test(value) || !EMAIL_PATTERN.test(value)) return;
+
+      emailCheckTimer = setTimeout(function () {
+        fetch('check-email.php?email=' + encodeURIComponent(value))
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            // Ignore a stale response if the user kept typing in the meantime.
+            if (emailInput.value.trim() !== value) return;
+            if (data.exists) {
+              emailTaken = true;
+              setState(emailInput, emailError, 'An account with this email already exists. Try logging in instead.');
+            }
+          })
+          .catch(function () {
+            // Fail silently — the server-side check on submit is still the real gate.
+          });
+      }, 500);
+    });
+  }
+
   // ---------- Password (register page only — login just needs "not empty") ----------
   const passwordInput = document.getElementById('password');
   const passwordError = document.getElementById('password_error');
-  const isRegisterPage = !!document.getElementById('confirm_password');
 
   let validatePassword = null;
   if (isRegisterPage) {
@@ -114,6 +147,7 @@
 
       if (nameInput && nameInput.value.trim() !== '' && validateName && !validateName()) ok = false;
       if (emailInput && emailInput.value.trim() !== '' && validateEmail && !validateEmail()) ok = false;
+      if (isRegisterPage && emailTaken) ok = false;
       if (passwordInput && isRegisterPage && passwordInput.value !== '' && validatePassword && !validatePassword()) ok = false;
       if (confirmInput && confirmInput.value !== '' && validateConfirm && !validateConfirm()) ok = false;
 
