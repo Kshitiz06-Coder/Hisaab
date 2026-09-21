@@ -39,11 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // ---- Filters ----
 $month_filter = $_GET['month'] ?? '';
+$search = trim($_GET['q'] ?? '');
 $sql = "SELECT i.*, c.name AS cat_name, c.icon AS cat_icon FROM income i LEFT JOIN categories c ON i.category_id = c.id WHERE i.user_id = ?";
 $types = 'i'; $params = [$user['id']];
 if ($month_filter) {
     $sql .= " AND DATE_FORMAT(i.entry_date, '%Y-%m') = ?";
     $types .= 's'; $params[] = $month_filter;
+}
+if ($search !== '') {
+    $sql .= " AND (i.source LIKE ? OR i.note LIKE ?)";
+    $types .= 'ss'; $like = '%' . $search . '%'; $params[] = $like; $params[] = $like;
 }
 $sql .= " ORDER BY i.entry_date DESC, i.id DESC";
 $stmt = mysqli_prepare($conn, $sql);
@@ -67,11 +72,15 @@ require __DIR__ . '/includes/topbar.php';
   <div class="filters">
     <form method="GET" id="filterForm">
       <input type="month" name="month" value="<?= e($month_filter) ?>" onchange="document.getElementById('filterForm').submit()">
+      <input type="text" name="q" value="<?= e($search) ?>" placeholder="Search source or note…" class="search-input" onkeydown="if(event.key==='Enter'){document.getElementById('filterForm').submit();}">
     </form>
-    <?php if ($month_filter): ?><a href="income.php" class="btn btn-ghost btn-sm">Clear filter</a><?php endif; ?>
+    <?php if ($month_filter || $search): ?><a href="income.php" class="btn btn-ghost btn-sm">Clear filter</a><?php endif; ?>
     <span class="pill">Total: <?= money($total, $currency) ?></span>
   </div>
-  <button class="btn btn-primary" data-modal-open="addIncomeModal">+ Add Income</button>
+  <div style="display:flex;gap:10px;">
+    <a href="export-csv.php?type=income<?= $month_filter ? '&month=' . urlencode($month_filter) : '' ?><?= $search ? '&q=' . urlencode($search) : '' ?>" class="btn btn-outline">⬇ Export CSV</a>
+    <button class="btn btn-primary" data-modal-open="addIncomeModal">+ Add Income</button>
+  </div>
 </div>
 
 <div class="card">
@@ -81,9 +90,14 @@ require __DIR__ . '/includes/topbar.php';
         <div class="emoji" style="display: block; width: 100%; text-align: center; margin-bottom: 12px;">
           <img src="img/Income.png" style="width: 48px; height: 48px; display: inline-block; margin: 0 auto; object-fit: contain;">
         </div>
-        <h4>No income logged<?= $month_filter ? ' for this month' : '' ?></h4>
-        <p>Add a source of income to start tracking your earnings.</p>
-        <button class="btn btn-primary btn-sm" data-modal-open="addIncomeModal">+ Add Income</button>
+        <?php if ($search): ?>
+          <h4>No income matches "<?= e($search) ?>"</h4>
+          <p>Try a different search term, or <a href="income.php<?= $month_filter ? '?month=' . urlencode($month_filter) : '' ?>">clear the search</a>.</p>
+        <?php else: ?>
+          <h4>No income logged<?= $month_filter ? ' for this month' : '' ?></h4>
+          <p>Add a source of income to start tracking your earnings.</p>
+          <button class="btn btn-primary btn-sm" data-modal-open="addIncomeModal">+ Add Income</button>
+        <?php endif; ?>
       </div>
     <?php else: ?>
       <table class="data-table">
