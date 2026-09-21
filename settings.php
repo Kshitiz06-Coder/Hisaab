@@ -78,6 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_bind_param($stmt, 'ii', $id, $user['id']);
         mysqli_stmt_execute($stmt);
         flash('success', 'Category removed.');
+    } elseif ($action === 'update_budgets') {
+        foreach (($_POST['budget'] ?? []) as $category_id => $amount) {
+            save_category_budget($conn, $user['id'], (int)$category_id, $amount);
+        }
+        flash('success', 'Budgets updated.');
     }
     redirect('settings.php' . (isset($_POST['tab']) ? '#' . $_POST['tab'] : ''));
 }
@@ -101,6 +106,13 @@ $custom_expense = [];
 $res = get_categories($conn, $user['id'], 'expense');
 while ($c = mysqli_fetch_assoc($res)) if ($c['user_id']) $custom_expense[] = $c;
 
+// All of this user's active expense categories (default + custom), for the Budgets tab
+$all_expense_categories = [];
+$res = get_categories($conn, $user['id'], 'expense');
+while ($c = mysqli_fetch_assoc($res)) $all_expense_categories[] = $c;
+$category_budgets = get_category_budgets($conn, $user['id']);
+$this_month_spend = get_month_expense_by_category($conn, $user['id'], date('Y-m'));
+
 $page_title = 'Settings';
 $page_sub = 'Manage your account';
 require __DIR__ . '/includes/head.php';
@@ -115,6 +127,7 @@ require __DIR__ . '/includes/topbar.php';
     <a href="#" data-tab-target="tab-preferences">⚙️ Preferences</a>
     <a href="#" data-tab-target="tab-notifications">🔔 Notifications</a>
     <a href="#" data-tab-target="tab-categories">🏷️ Categories</a>
+    <a href="#" data-tab-target="tab-budgets">💵 Budgets</a>
   </div>
 
   <div>
@@ -310,6 +323,53 @@ require __DIR__ . '/includes/topbar.php';
               <button type="submit" class="btn btn-outline btn-sm">+ Add</button>
             </form>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-panel" id="tab-budgets">
+      <div class="card">
+        <div class="card-head"><h3>Monthly budget limits</h3></div>
+        <div class="card-body">
+          <p style="color:var(--ink-500);font-size:13.5px;margin-bottom:18px;">Set a monthly spending limit for any expense category. Leave a field at 0 to remove its limit. Progress is based on <?= e(date('F Y')) ?> so far.</p>
+
+          <?php if (empty($all_expense_categories)): ?>
+            <p style="color:var(--ink-500);font-size:13.5px;">You don't have any active expense categories yet — turn some on in the Categories tab first.</p>
+          <?php else: ?>
+            <form method="POST">
+              <input type="hidden" name="action" value="update_budgets">
+              <input type="hidden" name="tab" value="tab-budgets">
+
+              <div class="budget-list">
+                <?php foreach ($all_expense_categories as $c):
+                  $budget = $category_budgets[$c['id']] ?? 0;
+                  $spent = $this_month_spend[$c['id']] ?? 0;
+                  $pct = $budget > 0 ? min(100, ($spent / $budget) * 100) : 0;
+                  $over = $budget > 0 && $spent > $budget;
+                ?>
+                  <div class="budget-row">
+                    <div class="budget-row-head">
+                      <span class="budget-cat-name"><?= e($c['icon']) ?> <?= e($c['name']) ?></span>
+                      <span class="field" style="margin:0;">
+                        <input type="number" step="0.01" min="0" name="budget[<?= $c['id'] ?>]" value="<?= $budget > 0 ? e($budget) : '' ?>" placeholder="No limit">
+                      </span>
+                    </div>
+                    <?php if ($budget > 0): ?>
+                      <div class="progress-track" style="margin:8px 0 4px;">
+                        <div class="progress-fill" style="width:<?= $pct ?>%;<?= $over ? 'background:var(--red-600);' : '' ?>"></div>
+                      </div>
+                      <div class="budget-row-meta" style="color:<?= $over ? 'var(--red-600)' : 'var(--ink-500)' ?>;">
+                        <?= money($spent, $currency) ?> of <?= money($budget, $currency) ?> spent this month
+                        <?= $over ? ' — over budget!' : '' ?>
+                      </div>
+                    <?php endif; ?>
+                  </div>
+                <?php endforeach; ?>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="margin-top:16px;">Save budgets</button>
+            </form>
+          <?php endif; ?>
         </div>
       </div>
     </div>
