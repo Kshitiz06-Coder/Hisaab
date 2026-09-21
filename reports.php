@@ -34,6 +34,24 @@ $total_income = get_total($conn, 'income', $user['id'], $month_filter);
 $total_expense = get_total($conn, 'expenses', $user['id'], $month_filter);
 $savings_rate = $total_income > 0 ? round((($total_income - $total_expense) / $total_income) * 100, 1) : 0;
 
+// Budget vs actual for the selected month (only categories with a budget set)
+$category_budgets = get_category_budgets($conn, $user['id']);
+$month_spend_by_cat = get_month_expense_by_category($conn, $user['id'], $month_filter);
+$budget_categories = [];
+if (!empty($category_budgets)) {
+    $res = get_categories($conn, $user['id'], 'expense');
+    while ($c = mysqli_fetch_assoc($res)) {
+        if (isset($category_budgets[$c['id']])) {
+            $budget_categories[] = [
+                'name' => $c['name'],
+                'icon' => $c['icon'],
+                'budget' => $category_budgets[$c['id']],
+                'spent' => $month_spend_by_cat[$c['id']] ?? 0,
+            ];
+        }
+    }
+}
+
 $page_title = 'Reports';
 $page_sub = 'Understand your spending patterns';
 require __DIR__ . '/includes/head.php';
@@ -106,6 +124,36 @@ require __DIR__ . '/includes/topbar.php';
     </div>
   </div>
 </div>
+
+<?php if (!empty($budget_categories)): ?>
+<div class="card" style="margin-top:18px;">
+  <div class="card-head">
+    <h3>Budgets — <?= e(date('F Y', strtotime($month_filter . '-01'))) ?></h3>
+    <a href="settings.php#tab-budgets" class="btn-sm btn btn-ghost">Manage budgets</a>
+  </div>
+  <div class="card-body">
+    <div class="budget-list">
+      <?php foreach ($budget_categories as $bc):
+        $pct = $bc['budget'] > 0 ? min(100, ($bc['spent'] / $bc['budget']) * 100) : 0;
+        $over = $bc['spent'] > $bc['budget'];
+      ?>
+        <div class="budget-row">
+          <div class="budget-row-head">
+            <span class="budget-cat-name"><?= e($bc['icon']) ?> <?= e($bc['name']) ?></span>
+            <span class="pill" style="<?= $over ? 'background:var(--red-50);color:var(--red-600);' : '' ?>">
+              <?= money($bc['spent'], $currency) ?> / <?= money($bc['budget'], $currency) ?>
+            </span>
+          </div>
+          <div class="progress-track" style="margin:8px 0 0;">
+            <div class="progress-fill" style="width:<?= $pct ?>%;<?= $over ? 'background:var(--red-600);' : '' ?>"></div>
+          </div>
+          <?php if ($over): ?><div class="budget-row-meta" style="color:var(--red-600);margin-top:6px;">Over budget by <?= money($bc['spent'] - $bc['budget'], $currency) ?></div><?php endif; ?>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="js/report-pdf.js"></script>
