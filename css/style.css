@@ -304,6 +304,11 @@ img { max-width: 100%; display: block; }
 .toolbar select, .toolbar input[type=month] {
   padding: 9px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--ink-300); font-size: 13.5px; background: #fff;
 }
+.search-input {
+  padding: 9px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--ink-300); font-size: 13.5px; background: #fff;
+  min-width: 220px;
+}
+.search-input:focus { outline: none; border-color: var(--green-600); }
 
 .data-table { width: 100%; border-collapse: collapse; }
 .data-table th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-500); padding: 10px 8px; border-bottom: 1px solid var(--ink-100); }
