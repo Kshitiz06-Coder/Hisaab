@@ -108,6 +108,46 @@ function add_custom_category($conn, $user_id, $type, $name, $icon = '💰') {
     return mysqli_insert_id($conn);
 }
 
+/** [category_id => monthly_budget] for every budget this user has set (expense categories only). */
+function get_category_budgets($conn, $user_id) {
+    $stmt = mysqli_prepare($conn, "SELECT category_id, monthly_budget FROM category_budgets WHERE user_id = ?");
+    mysqli_stmt_bind_param($stmt, 'i', $user_id);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $out = [];
+    while ($row = mysqli_fetch_assoc($res)) $out[(int)$row['category_id']] = (float)$row['monthly_budget'];
+    return $out;
+}
+
+/** Create/update/remove a single category's monthly budget. A budget of 0 or less removes the limit. */
+function save_category_budget($conn, $user_id, $category_id, $amount) {
+    $amount = (float)$amount;
+    if ($amount <= 0) {
+        $stmt = mysqli_prepare($conn, "DELETE FROM category_budgets WHERE user_id = ? AND category_id = ?");
+        mysqli_stmt_bind_param($stmt, 'ii', $user_id, $category_id);
+        mysqli_stmt_execute($stmt);
+        return;
+    }
+    $stmt = mysqli_prepare($conn, "INSERT INTO category_budgets (user_id, category_id, monthly_budget) VALUES (?,?,?)
+                                    ON DUPLICATE KEY UPDATE monthly_budget = VALUES(monthly_budget)");
+    mysqli_stmt_bind_param($stmt, 'iid', $user_id, $category_id, $amount);
+    mysqli_stmt_execute($stmt);
+}
+
+/** How much has actually been spent per category this month, for budget-vs-actual comparisons. */
+function get_month_expense_by_category($conn, $user_id, $month) {
+    $sql = "SELECT category_id, SUM(amount) AS total FROM expenses
+            WHERE user_id = ? AND DATE_FORMAT(entry_date, '%Y-%m') = ? AND category_id IS NOT NULL
+            GROUP BY category_id";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, 'is', $user_id, $month);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $out = [];
+    while ($row = mysqli_fetch_assoc($res)) $out[(int)$row['category_id']] = (float)$row['total'];
+    return $out;
+}
+
 /**
  * This month's income, expenses, and a lightweight savings analysis —
  * powers the dashboard's Savings Overview card.
