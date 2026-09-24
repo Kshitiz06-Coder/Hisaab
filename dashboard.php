@@ -246,5 +246,4 @@ require __DIR__ . '/includes/topbar.php';
   });
   }
 </script>
-
 <?php require __DIR__ . '/includes/footer_app.php'; ?>
